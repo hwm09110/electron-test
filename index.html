@@ -1,22 +1,59 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <title>Hello World!</title>
-  </head>
-  <body>
-    We are using Node.js <span id="node-version"></span>,
-    Chromium <span id="chrome-version"></span>,
-    and Electron <span id="electron-version"></span>.
-    <p id="process"></p>
 
-    <input type="text" id="message" name="" value="">
-    <br/>
-    <button id="button">按钮</button>
-    <button id="button2">按钮2</button>
-    <script src="./render.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->
+  <title>Hello World!</title>
+  <link rel="stylesheet" href="./css/index.css" />
+</head>
+
+<body>
+  We are using Node.js <span id="node-version"></span>,
+  Chromium <span id="chrome-version"></span>,
+  and Electron <span id="electron-version"></span>.
+  <p id="process"></p>
+
+  <input type="text" id="message" name="" value="">
+  <br />
+  <button id="button">按钮1</button>
+  <button id="button2">按钮2</button>
+  <hr />
+  <div class="container-wrap">
+    <div class="left">
+      <div class="base-info">
+        <div class="item">
+          <label>根目录(FROM)：</label>
+          <input type="text" class="dir-input" v-model="basicInfo.localDir" />
+        </div>
+        <div class="item">
+          <label>广东根目录(TO)：</label>
+          <input type="text" class="dir-input" v-model="basicInfo.gdDir" />
+        </div>
+        <div class="item">
+          <label>河南根目录(TO)：</label>
+          <input type="text" class="dir-input" v-model="basicInfo.hnDir" />
+        </div>
+        <div class="item">
+          <label>是否同步到河南：</label>
+          <input type="checkbox" v-model="basicInfo.syncHeNan" />
+        </div>
+        <div class="item">
+          <button class="confirm-btn" @click="handleConfirm">确定</button>
+        </div>
+      </div>
+      <div>
+        <textarea class="file-info" placeholder="每个文件目录单独一行" v-model="copyfile" spellcheck="false"></textarea>
+      </div>
+    </div>
+    <div class="right" v-html="copyLog"></div>
+  </div>
+
+  <script type="text/javascript" src="./lib/vue/polyfill.js"></script>
+  <script type="text/javascript" src="./lib/vue/vue.min.js"></script>
+  <script src="./render.js"></script>
+</body>
+
 </html>
