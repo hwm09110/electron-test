@@ -36,18 +36,18 @@ window.addEventListener('DOMContentLoaded', () => {
 })
 
 function copyFile(sourcePath, destinationPath) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, _reject) => {
     // 读取源文件
     fs.readFile(sourcePath, (err, data) => {
       if (err) {
-        reject({ isSuccess: false, path: sourcePath })
+        resolve({ isSuccess: false, path: sourcePath, error: err })
         return
       }
 
       // 写入目标文件
       fs.writeFile(destinationPath, data, (err) => {
         if (err) {
-          reject({ isSuccess: false, path: sourcePath })
+          resolve({ isSuccess: false, path: sourcePath, error: err })
           return
         }
         resolve({ isSuccess: true, path: sourcePath })

@@ -10,7 +10,7 @@ window.addEventListener('DOMContentLoaded', () => {
         localDir: 'D:/workFile/all-php-project/php-project/',
         gdDir: 'D:/workFile/all-php-project/prodviews95/',
         hnDir: 'D:/workFile/all-php-project/prodviews50/',
-        syncHeNan: true,
+        syncHeNan: false,
       },
       copyfile: `views\\support\\callpool\\recharge\\accountmanage.html
 views\\support\\callpool\\recharge\\rechargedetail.html`,
@@ -50,10 +50,12 @@ views\\support\\callpool\\recharge\\rechargedetail.html`,
             this.basicInfo.gdDir + path,
           )
           console.log(res)
-          this.copyLog += `<div><span>${
-            this.basicInfo.gdDir + path
-          }</span>----------><strong style="color:${res.isSuccess ? '#8ce6b0' : '#ff0000'}">${
-            res.isSuccess ? '成功' : '失败'
+          this.copyLog += `<br/><div><strong style="color:${
+            res.isSuccess ? '#19be6b' : '#ed4014'
+          }">COPY${
+            res.isSuccess
+              ? `成功--->${this.basicInfo.localDir + path}`
+              : `失败--->${res.error.message}`
           }</strong></div>`
         }
 
@@ -67,10 +69,12 @@ views\\support\\callpool\\recharge\\rechargedetail.html`,
               this.basicInfo.hnDir + path,
             )
             console.log(res)
-            this.copyLog += `<div><span>${
-              this.basicInfo.hnDir + path
-            }</span>----------><strong style="color:${res.isSuccess ? '#8ce6b0' : '#ff0000'}">${
-              res.isSuccess ? '成功' : '失败'
+            this.copyLog += `<br/><div><strong style="color:${
+              res.isSuccess ? '#19be6b' : '#ed4014'
+            }">COPY${
+              res.isSuccess
+                ? `成功--->${this.basicInfo.localDir + path}`
+                : `失败--->${res.error.message}`
             }</strong></div>`
           }
         }
