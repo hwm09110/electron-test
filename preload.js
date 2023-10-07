@@ -3,9 +3,11 @@ const { ipcRenderer, contextBridge } = require('electron')
 const fs = require('fs')
 const path = require('path')
 
+let appConfig = null
 contextBridge.exposeInMainWorld('commonAPI', {
-  getNumber: () => {
-    console.log(123)
+  getAppConfig: () => {
+    console.log(123, appConfig)
+    return appConfig
   },
   copyFile,
 })
@@ -24,14 +26,16 @@ window.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('button').onclick = function () {
     var message = document.getElementById('message').value
-    // 使用 ipcRenderer.send 向主进程发送消息。
-    console.log('button--->', window.commonAPI)
-    ipcRenderer.send('asynchronous-message', message)
+    console.log('button1--->', window.commonAPI)
   }
 
+  // 使用 ipcRenderer.send 向主进程发送消息。
+  ipcRenderer.send('asynchronous-message', 'getExePath')
+
   // 监听主进程返回的消息
-  ipcRenderer.on('asynchronous-reply', function (event, arg) {
-    alert(arg)
+  ipcRenderer.on('getExePath', function (event, data) {
+    console.log('监听主进程返回的消息', data)
+    appConfig = data
   })
 })
 

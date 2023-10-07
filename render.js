@@ -1,20 +1,29 @@
 window.addEventListener('DOMContentLoaded', () => {
-  // document.getElementById('button2').onclick = function () {
-  //   console.log('button2--->', window.commonAPI.getNumber())
-  // }
+  document.getElementById('button2').onclick = function () {
+    console.log('button2--->', window.commonAPI.getAppConfig())
+  }
   var vm = new Vue({
     el: '.container-wrap',
     delimiters: ['${', '}'],
     data: {
       basicInfo: {
-        localDir: 'D:/workFile/all-php-project/php-project/',
-        gdDir: 'D:/workFile/all-php-project/prodviews95/',
-        hnDir: 'D:/workFile/all-php-project/prodviews50/',
+        localDir: '',
+        gdDir: '',
+        hnDir: '',
         syncHeNan: false,
       },
-      copyfile: `views\\support\\callpool\\recharge\\accountmanage.html
-views\\support\\callpool\\recharge\\rechargedetail.html`,
+      copyfile: ``,
       copyLog: '',
+      appConfig: null,
+    },
+    watch: {
+      appConfig(newVal) {
+        if (newVal && Object.keys(newVal).length) {
+          this.basicInfo.localDir = newVal?.local ?? ''
+          this.basicInfo.gdDir = newVal?.guangdong ?? ''
+          this.basicInfo.hnDir = newVal?.henan ?? ''
+        }
+      },
     },
     methods: {
       handleConfirm() {
@@ -79,8 +88,21 @@ views\\support\\callpool\\recharge\\rechargedetail.html`,
           }
         }
       },
+      // 获取配置
+      getAppConfigInfo() {
+        let timer = setInterval(() => {
+          if (this.appConfig && Object.keys(this.appConfig).length) {
+            clearInterval(timer)
+            return false
+          }
+          this.appConfig = window.commonAPI.getAppConfig()
+          console.log('appConfig-------', this.appConfig)
+        }, 400)
+      },
     },
-    created() {},
+    created() {
+      this.getAppConfigInfo()
+    },
   })
   console.log(vm)
 })

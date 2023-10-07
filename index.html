@@ -31,22 +31,23 @@
         </div>
         <div class="item">
           <label>广东根目录(TO)：</label>
-          <input type="text" class="dir-input" v-model="basicInfo.gdDir" />
+          <input type="text" class="dir-input" v-model="basicInfo.gdDir" spellcheck="false" />
         </div>
         <div class="item">
           <label>河南根目录(TO)：</label>
-          <input type="text" class="dir-input" v-model="basicInfo.hnDir" />
+          <input type="text" class="dir-input" v-model="basicInfo.hnDir" spellcheck="false" />
         </div>
         <div class="item">
           <label>是否同步到河南：</label>
-          <input type="checkbox" v-model="basicInfo.syncHeNan" />
+          <input type="checkbox" v-model="basicInfo.syncHeNan" spellcheck="false" />
         </div>
         <div class="item">
           <button class="confirm-btn" @click="handleConfirm">确定</button>
         </div>
       </div>
       <div>
-        <textarea class="file-info" placeholder="每个文件目录单独一行" v-model="copyfile" spellcheck="false"></textarea>
+        <textarea class="file-info" placeholder="每个文件目录单独一行,列如：views/support/callpool/recharge/rechargedetail.html"
+          v-model="copyfile" spellcheck="false"></textarea>
       </div>
     </div>
     <div class="right" v-html="copyLog"></div>

@@ -3,6 +3,7 @@ try {
 } catch (_) {}
 
 const path = require('path')
+const fs = require('fs')
 const { app, BrowserWindow, ipcMain } = require('electron')
 
 const createWindow = () => {
@@ -31,9 +32,35 @@ app.on('window-all-closed', () => {
 })
 
 // 监听渲染进程发送的消息
-ipcMain.on('asynchronous-message', (event, arg) => {
-  const reply = arg.split('').reverse().join('')
-  console.log('reply: ', reply)
+ipcMain.on('asynchronous-message', async (event, reply_command) => {
   // 发送消息到主进程
-  event.sender.send('asynchronous-reply', reply)
+  switch (reply_command) {
+    case 'getExePath':
+      const data = await getAppConfig().catch((er) => {
+        console.log('getAppConfig error', er)
+      })
+      event.sender.send(reply_command, data)
+      break
+
+    default:
+      event.sender.send(reply_command, exePath)
+      break
+  }
 })
+
+function getAppConfig() {
+  const exeDirName = path.dirname(app.getPath('exe')).replace('/\\/g', '/')
+  const configPath = `${process.env.NODE_ENV == 'development' ? __dirname : exeDirName}/config.json`
+  // console.log('configPath-->', configPath)
+  // console.log('process.env-->', process.env.NODE_ENV)
+  return new Promise((resolve, reject) => {
+    fs.readFile(configPath, 'utf-8', (err, data) => {
+      if (err) {
+        return reject(err)
+      }
+      if (data) {
+        resolve(JSON.parse(data))
+      }
+    })
+  })
+}
