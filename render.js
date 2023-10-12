@@ -90,11 +90,13 @@ window.addEventListener('DOMContentLoaded', () => {
       },
       // 获取配置
       getAppConfigInfo() {
+        let loadCount = 0
         let timer = setInterval(() => {
-          if (this.appConfig && Object.keys(this.appConfig).length) {
+          if ((this.appConfig && Object.keys(this.appConfig).length) || loadCount == 10) {
             clearInterval(timer)
             return false
           }
+          loadCount++
           this.appConfig = window.commonAPI.getAppConfig()
           console.log('appConfig-------', this.appConfig)
         }, 400)

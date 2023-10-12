@@ -12,12 +12,13 @@ const createWindow = () => {
     height: 750,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true,
     },
   })
   mainWindow.loadFile('index.html')
   // mainWindow.loadURL('https://www.baokaodaxue.com')
   // 打开开发工具
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 }
 
 app.whenReady().then(() => {
