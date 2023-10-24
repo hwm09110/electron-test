@@ -132,8 +132,7 @@ function startElectron() {
   } else if (process.env.npm_execpath.endsWith('npm-cli.js')) {
     args = args.concat(process.argv.slice(2))
   }
-  console.log(args)
-  console.log(path.join(__dirname, '../dist/electron/main.js'))
+
   electronProcess = spawn(electron, args)
 
   electronProcess.stdout.on('data', (data) => {

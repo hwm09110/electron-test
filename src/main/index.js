@@ -12,12 +12,12 @@ const createWindow = () => {
     minWidth: 1200,
     height: 750,
     webPreferences: {
+      devTools: process.env.NODE_ENV === 'development',
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true, // 是否允许web端使用node
       contextIsolation: true, // 是否允许自定义preload脚本
     },
   })
-  console.log('???---', __dirname)
   // mainWindow.loadFile(winURL)
   mainWindow.loadURL(winURL)
   // 打开开发工具
