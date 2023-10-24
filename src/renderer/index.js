@@ -1,3 +1,6 @@
+import Vue from 'vue'
+import './assets/css/index.css'
+
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('button2').onclick = function () {
     console.log('button2--->', window.commonAPI.getAppConfig())

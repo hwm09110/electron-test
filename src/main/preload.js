@@ -13,6 +13,7 @@ contextBridge.exposeInMainWorld('commonAPI', {
 })
 
 window.addEventListener('DOMContentLoaded', () => {
+  console.log('preload.js --- DOMContentLoaded')
   const replaceText = (selector, text) => {
     const element = document.getElementById(selector)
     if (element) element.innerText = text

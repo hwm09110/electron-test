@@ -1,10 +1,11 @@
-try {
-  require('electron-reloader')(module, {})
-} catch (_) {}
-
 const path = require('path')
 const fs = require('fs')
 const { app, BrowserWindow, ipcMain } = require('electron')
+
+const winURL =
+  process.env.NODE_ENV === 'development'
+    ? `http://localhost:9080`
+    : `file://${__dirname}/index.html`
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
@@ -12,13 +13,15 @@ const createWindow = () => {
     height: 750,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      nodeIntegration: true,
+      nodeIntegration: true, // 是否允许web端使用node
+      contextIsolation: true, // 是否允许自定义preload脚本
     },
   })
-  mainWindow.loadFile('index.html')
-  // mainWindow.loadURL('https://www.baokaodaxue.com')
+  console.log('???---', __dirname)
+  // mainWindow.loadFile(winURL)
+  mainWindow.loadURL(winURL)
   // 打开开发工具
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 }
 
 app.whenReady().then(() => {
@@ -51,7 +54,11 @@ ipcMain.on('asynchronous-message', async (event, reply_command) => {
 
 function getAppConfig() {
   const exeDirName = path.dirname(app.getPath('exe')).replace('/\\/g', '/')
-  const configPath = `${process.env.NODE_ENV == 'development' ? __dirname : exeDirName}/config.json`
+  const configPath = `${
+    process.env.NODE_ENV == 'development'
+      ? path.join(__dirname, 'config.json')
+      : exeDirName + '/config.json'
+  }`
   // console.log('configPath-->', configPath)
   // console.log('process.env-->', process.env.NODE_ENV)
   return new Promise((resolve, reject) => {
