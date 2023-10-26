@@ -14,21 +14,6 @@ contextBridge.exposeInMainWorld('commonAPI', {
 
 window.addEventListener('DOMContentLoaded', () => {
   console.log('preload.js --- DOMContentLoaded')
-  const replaceText = (selector, text) => {
-    const element = document.getElementById(selector)
-    if (element) element.innerText = text
-  }
-
-  for (const dependency of ['chrome', 'node', 'electron']) {
-    replaceText(`${dependency}-version`, process.versions[dependency])
-  }
-
-  document.getElementById('process').innerText = JSON.stringify(process.versions)
-
-  document.getElementById('button').onclick = function () {
-    var message = document.getElementById('message').value
-    console.log('button1--->', window.commonAPI)
-  }
 
   // 使用 ipcRenderer.send 向主进程发送消息。
   ipcRenderer.send('asynchronous-message', 'getExePath')

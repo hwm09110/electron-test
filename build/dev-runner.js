@@ -194,5 +194,5 @@ function init() {
     })
 }
 
-init()
-// startRenderer() //启动renderer项目
+if (process.env.BUILD_TARGET === 'renderer') startRenderer()
+else init()

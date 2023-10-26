@@ -14,6 +14,7 @@ const errorLog = chalk.bgRed.white(' ERROR ') + ' '
 const okayLog = chalk.bgBlue.white(' OKAY ') + ' '
 
 if (process.env.BUILD_TARGET === 'clean') clean()
+else if (process.env.BUILD_TARGET === 'web') buildWeb()
 else build()
 
 function clean() {
@@ -75,6 +76,21 @@ async function build() {
     })
     .catch((err) => {
       process.exit(1)
+    })
+}
+
+async function buildWeb() {
+  del.sync(['dist/web/*'])
+  pack(rendererConfig)
+    .then((result) => {
+      // results += result + '\n\n'
+      console.log(result)
+      console.log(`${doneLog} web ${chalk.yellow('`build complete`')}\n`)
+      process.exit()
+    })
+    .catch((err) => {
+      console.log(`\n  ${errorLog}failed to build renderer process`)
+      console.error(`\n${err}\n`)
     })
 }
 
