@@ -5,7 +5,7 @@
   "main": "./dist/electron/main.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development node ./build/dev-runner.js",
-    "dev:renderer": "cross-env NODE_ENV=development BUILD_TARGET=renderer node ./build/dev-runner.js",
+    "dev:web": "cross-env NODE_ENV=development BUILD_TARGET=web node ./build/dev-runner.js",
     "build": "cross-env NODE_ENV=production node ./build/index.js && electron-builder",
     "build:web": "cross-env NODE_ENV=production BUILD_TARGET=web node ./build/index.js",
     "clean": "cross-env BUILD_TARGET=clean node ./build/index.js"

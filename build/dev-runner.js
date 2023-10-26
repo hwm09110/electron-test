@@ -1,6 +1,7 @@
 const electron = require('electron')
 const chalk = require('chalk')
 const path = require('path')
+const del = require('del')
 const { say } = require('cfonts')
 const { spawn } = require('child_process')
 const webpack = require('webpack')
@@ -184,6 +185,7 @@ function greeting() {
 
 function init() {
   greeting()
+  del.sync(['dist/*'])
 
   Promise.all([startRenderer(), startMain()])
     .then(() => {
@@ -194,5 +196,5 @@ function init() {
     })
 }
 
-if (process.env.BUILD_TARGET === 'renderer') startRenderer()
+if (process.env.BUILD_TARGET === 'web') startRenderer()
 else init()
