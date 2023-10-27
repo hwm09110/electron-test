@@ -63,9 +63,22 @@ function startRenderer() {
     //   )
     // })
 
-    // compiler.hooks.done.tap('done', (stats) => {
-    //   logStats('Renderer', stats)
-    // })
+    compiler.hooks.done.tap('done', (stats) => {
+      const compilation = stats.compilation
+      Object.keys(compilation.assets).forEach((key) => {
+        console.log(chalk.blue(key))
+      })
+      compilation.warnings.forEach((key) => {
+        console.log(chalk.yellow(key))
+      })
+      compilation.errors.forEach((key) => {
+        console.log(chalk.red(`${key}:${stats.compilation.errors[key]}`))
+      })
+      console.log(
+        chalk.green(`time：${(stats.endTime - stats.startTime) / 1000} s\n`) +
+          chalk.white('调试完毕'),
+      )
+    })
 
     const server = new WebpackDevServer(
       {
@@ -82,7 +95,9 @@ function startRenderer() {
       },
       compiler,
     )
-    server.start()
+    server.start().catch((err) => {
+      console.log(err)
+    })
   })
 }
 
