@@ -1,5 +1,5 @@
 {
-  "name": "electron",
+  "name": "electron-demo",
   "version": "0.0.2",
   "description": "electron-test",
   "main": "./dist/electron/main.js",
@@ -64,7 +64,7 @@
     "vuex": "^3.0.1"
   },
   "build": {
-    "productName": "electron-builder-start",
+    "productName": "electron-demo",
     "appId": "456789",
     "directories": {
       "output": "build/pack"
@@ -81,7 +81,7 @@
       "installerHeaderIcon": "build/icons/icon.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "electron-builder-start"
+      "shortcutName": "electron-demo"
     },
     "dmg": {
       "contents": [
@@ -103,6 +103,7 @@
     },
     "win": {
       "icon": "build/icons/icon.ico",
+      "artifactName": "${productName}_Setup_${version}.${ext}",
       "target": [
         {
           "target": "nsis",
