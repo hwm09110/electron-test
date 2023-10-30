@@ -69,6 +69,10 @@ function checkAppUpdate() {
   // 检测到不需要更新时
   autoUpdater.on('update-not-available', () => {
     console.info('现在使用的就是最新版本，不用更新')
+    dialog.showMessageBox({
+      title: '提示',
+      message: '现在使用的就是最新版本，不用更新',
+    })
   })
 
   // 更新下载进度
