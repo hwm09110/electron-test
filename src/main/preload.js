@@ -10,6 +10,7 @@ contextBridge.exposeInMainWorld('commonAPI', {
     return appConfig
   },
   copyFile,
+  checkAppUpdate,
 })
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -44,4 +45,8 @@ function copyFile(sourcePath, destinationPath) {
       })
     })
   })
+}
+
+function checkAppUpdate() {
+  ipcRenderer.send('check-for-update')
 }

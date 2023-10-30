@@ -1,6 +1,6 @@
 {
   "name": "electron",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "electron-test",
   "main": "./dist/electron/main.js",
   "scripts": {
@@ -36,6 +36,7 @@
     "electron": "^18.2.0",
     "electron-builder": "^20.19.2",
     "electron-reloader": "^1.2.3",
+    "electron-updater": "^6.1.4",
     "file-loader": "^1.1.11",
     "html-webpack-plugin": "^4.5.2",
     "less-loader": "^11.1.3",
@@ -113,6 +114,13 @@
     },
     "linux": {
       "icon": "build/icons"
-    }
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "hwm09110",
+        "repo": "electron-test"
+      }
+    ]
   }
 }
