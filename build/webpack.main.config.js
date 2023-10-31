@@ -37,7 +37,7 @@ let mainConfig = {
             presets: [['@babel/preset-env', { targets: { node: 7 } }]],
           },
         },
-        exclude: /node_modules/,
+        // exclude: /node_modules/,
       },
       {
         test: /\.node$/,
