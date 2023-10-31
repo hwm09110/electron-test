@@ -1,7 +1,7 @@
 const path = require('path')
 const fs = require('fs')
 const { app, BrowserWindow, ipcMain } = require('electron')
-const checkAppUpdate = require('./lib/appUpload')
+const checkAppUpdate = require('./lib/appUpdate')
 
 const winURL =
   process.env.NODE_ENV === 'development'

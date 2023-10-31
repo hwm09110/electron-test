@@ -27,13 +27,13 @@
         </Header>
         <Content
           :style="{
-            margin: '10px',
-            background: '#fff',
-            minHeight: 'calc(100vh - 64px)',
+            height: 'calc(100vh - 64px)',
             overflow: 'auto',
           }"
         >
-          <router-view />
+          <div class="content-inner-wrap">
+            <router-view />
+          </div>
         </Content>
       </Layout>
     </Layout>
@@ -127,5 +127,9 @@
     transition: font-size 0.2s ease 0.2s, transform 0.2s ease 0.2s;
     vertical-align: middle;
     font-size: 22px;
+  }
+  .content-inner-wrap {
+    margin: 10px;
+    background: #fff;
   }
 </style>
