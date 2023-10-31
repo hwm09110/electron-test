@@ -23,6 +23,16 @@ TIP：打包使用 npm，不用用 yarn
         "url": "http://192.168.8.172:3600/resource/app/pack/"
       }
     ]
+
+或者
+
+"publish": [
+      {
+        "provider": "github",
+        "owner": "hwm09110",
+        "repo": "electron-test"
+      }
+    ]
 ```
 
 方式 2：配置 electron-builder.yml
