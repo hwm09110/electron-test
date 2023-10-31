@@ -5,8 +5,9 @@ const { app, ipcMain, dialog } = require('electron')
 // dev-start, 这里是为了在本地做应用升级测试使用，正式环境请务必删除
 if (process.env['NODE_ENV'] === 'development') {
   autoUpdater.updateConfigPath = path.join(__dirname, '../../dev-app-update.yml')
-  autoUpdater.currentVersion = '1.0.0' // fix：在本地调试时会去取electron的版本，而不是app的版本
+  autoUpdater.currentVersion = '0.0.1' // fix：在本地调试时会去取electron的版本，而不是app的版本
 }
+// 设置应用状态为已打包
 Object.defineProperty(app, 'isPackaged', {
   get() {
     return true
