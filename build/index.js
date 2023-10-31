@@ -18,13 +18,13 @@ else if (process.env.BUILD_TARGET === 'web') buildWeb()
 else build()
 
 function clean() {
-  del.sync(['dist/*', 'build/pack/*', '!dist/icons', '!dist/icons/icon.*', '!dist/script'])
+  del.sync(['dist/*', 'pack/*'])
   console.log(`\n${doneLog}\n`)
   process.exit()
 }
 
 async function build() {
-  del.sync(['dist/electron/*', 'build/pack/*', '!.gitkeep'])
+  del.sync(['dist/electron/*', 'pack/*', '!.gitkeep'])
 
   const tasks2 = ['main', 'renderer']
   const m = new Multispinner(tasks2, {

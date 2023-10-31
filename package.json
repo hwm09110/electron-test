@@ -68,7 +68,7 @@
     "productName": "electron-demo",
     "appId": "456789",
     "directories": {
-      "output": "build/pack"
+      "output": "pack"
     },
     "files": [
       "dist/electron/**/*"
@@ -82,7 +82,9 @@
       "installerHeaderIcon": "build/icons/icon.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "electron-demo"
+      "shortcutName": "electron-demo",
+      "artifactName": "${productName}-setup-v${version}.${ext}",
+      "uninstallDisplayName": "${productName}"
     },
     "dmg": {
       "contents": [
