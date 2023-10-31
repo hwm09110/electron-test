@@ -53,6 +53,11 @@
             id: '1',
             path: '/tool/fileCopy',
           },
+          {
+            name: '应用信息',
+            id: '2',
+            path: '/tool/appInfo',
+          },
         ],
       }
     },

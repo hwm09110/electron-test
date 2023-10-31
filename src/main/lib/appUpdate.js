@@ -1,6 +1,7 @@
 const path = require('path')
 const { autoUpdater } = require('electron-updater')
 const { app, ipcMain, dialog } = require('electron')
+const logger = require('./logger')
 
 // dev-start, 这里是为了在本地做应用升级测试使用，正式环境请务必删除
 if (process.env['NODE_ENV'] === 'development') {
@@ -20,6 +21,7 @@ function checkAppUpdate() {
   ipcMain.on('check-for-update', () => {
     console.info('触发检查更新')
     autoUpdater.checkForUpdates()
+    logger.info('autoUpdater触发检查更新check-for-update')
   })
 
   // 设置自动下载为false(默认为true，检测到有更新就自动下载)
@@ -27,16 +29,19 @@ function checkAppUpdate() {
   // 检测下载错误
   autoUpdater.on('error', (error) => {
     console.error('更新异常', error)
+    logger.info('autoUpdater error' + error)
   })
 
   // 检测是否需要更新
   autoUpdater.on('checking-for-update', () => {
     console.info('正在检查更新……')
+    logger.info('autoUpdater 正在检查更新……')
   })
 
   // 检测到可以更新时
   autoUpdater.on('update-available', (releaseInfo) => {
     console.info('检测到新版本，确认是否下载')
+    logger.info('autoUpdater 检测到新版本，确认是否下载' + releaseInfo)
     const releaseNotes = releaseInfo.releaseNotes
     let releaseContent = ''
     if (releaseNotes) {
@@ -70,6 +75,7 @@ function checkAppUpdate() {
   // 检测到不需要更新时
   autoUpdater.on('update-not-available', () => {
     console.info('现在使用的就是最新版本，不用更新')
+    logger.info('autoUpdater 现在使用的就是最新版本，不用更新')
     dialog.showMessageBox({
       title: '提示',
       message: '现在使用的就是最新版本，不用更新',
@@ -79,11 +85,13 @@ function checkAppUpdate() {
   // 更新下载进度
   autoUpdater.on('download-progress', (progress) => {
     console.info('下载进度', progress)
+    logger.info('autoUpdater 下载进度' + progress)
   })
 
   // 当需要更新的内容下载完成后
   autoUpdater.on('update-downloaded', () => {
     console.info('下载完成，准备更新')
+    logger.info('autoUpdater 下载完成，准备更新')
     dialog
       .showMessageBox({
         title: '安装更新',

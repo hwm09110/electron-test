@@ -20,7 +20,6 @@
         </div>
         <div class="item">
           <button class="confirm-btn" @click="handleConfirm">确定</button>
-          <button class="confirm-btn" @click="handleCheckUpdate">检查更新</button>
         </div>
       </div>
       <div>
@@ -38,7 +37,7 @@
 
 <script>
   export default {
-    name: 'Welcome',
+    name: 'FileCopy',
     data() {
       return {
         basicInfo: {
@@ -140,9 +139,6 @@
             console.log('getAppConfigInfo catch', error)
           }
         }, 400)
-      },
-      handleCheckUpdate() {
-        window.commonAPI.checkAppUpdate()
       },
     },
     created() {

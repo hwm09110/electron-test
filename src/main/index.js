@@ -2,6 +2,7 @@ const path = require('path')
 const fs = require('fs')
 const { app, BrowserWindow, ipcMain } = require('electron')
 const checkAppUpdate = require('./lib/appUpdate')
+const logger = require('./lib/logger')
 
 const winURL =
   process.env.NODE_ENV === 'development'
@@ -31,6 +32,7 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
   checkAppUpdate()
+  logger.info('app ready~~~~~' + path.dirname(app.getPath('exe')))
 })
 
 app.on('window-all-closed', () => {
