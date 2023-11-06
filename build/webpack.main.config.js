@@ -63,10 +63,6 @@ let mainConfig = {
         from: path.join(__dirname, '../src/main/preload.js'),
         to: path.join(__dirname, '../dist/electron/preload.js'),
       },
-      {
-        from: path.join(__dirname, '../src/main/config.json'),
-        to: path.join(__dirname, '../dist/electron/config.json'),
-      },
     ]),
   ],
   resolve: {
