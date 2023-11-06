@@ -3,6 +3,7 @@ const fs = require('fs')
 const { app, BrowserWindow, ipcMain } = require('electron')
 const checkAppUpdate = require('./lib/appUpdate')
 const logger = require('./lib/logger')
+const initAppTray = require('./lib/appTray')
 
 const winURL =
   process.env.NODE_ENV === 'development'
@@ -24,6 +25,9 @@ const createWindow = () => {
   mainWindow.loadURL(winURL)
   // 打开开发工具
   mainWindow.webContents.openDevTools()
+
+  // 设置系统托盘
+  initAppTray(mainWindow)
 }
 
 app.whenReady().then(() => {
@@ -60,8 +64,8 @@ function getAppConfig() {
   const exeDirName = path.dirname(app.getPath('exe')).replace('/\\/g', '/')
   const configPath = `${
     process.env.NODE_ENV == 'development'
-      ? path.join(__dirname, 'config.json')
-      : exeDirName + '/config.json'
+      ? path.join(__dirname, '../../public/config.json')
+      : exeDirName + '/resources/public/config.json'
   }`
   // console.log('configPath-->', configPath)
   // console.log('process.env-->', process.env.NODE_ENV)
