@@ -25,9 +25,9 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            build/pack/*.exe
-            build/pack/*.exe.blockmap
-            build/pack/latest.yml
+            pack/*.exe
+            pack/*.exe.blockmap
+            pack/latest.yml
           draft: false
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
