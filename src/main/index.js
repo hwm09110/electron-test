@@ -16,8 +16,7 @@ const createWindow = () => {
     minWidth: 1200,
     height: 750,
     webPreferences: {
-      // devTools: process.env.NODE_ENV === 'development',
-      devTools: true,
+      devTools: process.env.NODE_ENV === 'development',
       // preload: path.join(__dirname, 'preload.js'),
       enableRemoteModule: true,
       nodeIntegration: true, // 是否允许web端使用node
