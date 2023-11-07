@@ -8,6 +8,7 @@ import '@/assets/css/reset.css'
 
 Vue.config.ignoredElements = ['wx-open-launch-weapp']
 Vue.config.productionTip = false
+Vue.prototype.$ipcRenderer = window.require('electron').ipcRenderer
 
 Vue.use(ViewUI)
 

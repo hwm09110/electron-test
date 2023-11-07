@@ -36,6 +36,7 @@
 </template>
 
 <script>
+  const fs = window.require('fs')
   export default {
     name: 'FileCopy',
     data() {
@@ -64,7 +65,6 @@
       handleConfirm() {
         console.log(this.basicInfo)
         console.log(this.copyfile)
-        console.log(window.commonAPI.copyFile)
         if (!this.copyfile.trim()) {
           alert('填写需要copy的文件路径')
           return
@@ -89,10 +89,7 @@
         this.copyLog += '<h2>【广东】↓↓↓</h2>'
         for (let index = 0, len = copyFilePathList.length; index < len; index++) {
           const path = copyFilePathList[index]
-          const res = await window.commonAPI.copyFile(
-            this.basicInfo.localDir + path,
-            this.basicInfo.gdDir + path,
-          )
+          const res = await this.copyFile(this.basicInfo.localDir + path, this.basicInfo.gdDir + path)
           console.log(res)
           this.copyLog += `<br/><div><strong style="color:${
             res.isSuccess ? '#19be6b' : '#ed4014'
@@ -108,7 +105,7 @@
           this.copyLog += '<br/><br/><br/><h2>【河南】↓↓↓</h2>'
           for (let index = 0, len = copyFilePathList.length; index < len; index++) {
             const path = copyFilePathList[index]
-            const res = await window.commonAPI.copyFile(
+            const res = await this.copyFile(
               this.basicInfo.localDir + path,
               this.basicInfo.hnDir + path,
             )
@@ -123,22 +120,34 @@
           }
         }
       },
+      //使用node api copy文件
+      copyFile(sourcePath, destinationPath) {
+        return new Promise((resolve, _reject) => {
+          // 读取源文件
+          fs.readFile(sourcePath, (err, data) => {
+            if (err) {
+              resolve({ isSuccess: false, path: sourcePath, error: err })
+              return
+            }
+
+            // 写入目标文件
+            fs.writeFile(destinationPath, data, (err) => {
+              if (err) {
+                resolve({ isSuccess: false, path: sourcePath, error: err })
+                return
+              }
+              resolve({ isSuccess: true, path: sourcePath })
+            })
+          })
+        })
+      },
       // 获取配置
       getAppConfigInfo() {
-        let loadCount = 0
-        let timer = setInterval(() => {
-          if ((this.appConfig && Object.keys(this.appConfig).length) || loadCount == 5) {
-            clearInterval(timer)
-            return false
-          }
-          loadCount++
-          try {
-            this.appConfig = window.commonAPI.getAppConfig()
-            console.log('appConfig-------', this.appConfig)
-          } catch (error) {
-            console.log('getAppConfigInfo catch', error)
-          }
-        }, 400)
+        this.$ipcRenderer.once('getExePath', (event, data) => {
+          console.log('监听主进程返回的消息[getExePath]', data)
+          this.appConfig = data
+        })
+        this.$ipcRenderer.send('asynchronous-message', 'getExePath')
       },
     },
     created() {
@@ -205,4 +214,3 @@
     }
   }
 </style>
-

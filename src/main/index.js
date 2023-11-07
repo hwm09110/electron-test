@@ -10,15 +10,18 @@ const winURL =
     ? `http://localhost:9080`
     : `file://${__dirname}/index.html`
 
+let mainWindow
 const createWindow = () => {
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     minWidth: 1200,
     height: 750,
     webPreferences: {
-      devTools: process.env.NODE_ENV === 'development',
-      preload: path.join(__dirname, 'preload.js'),
+      // devTools: process.env.NODE_ENV === 'development',
+      devTools: true,
+      // preload: path.join(__dirname, 'preload.js'),
+      enableRemoteModule: true,
       nodeIntegration: true, // 是否允许web端使用node
-      contextIsolation: true, // 是否允许自定义preload脚本
+      contextIsolation: false, // 上下文隔离功能将确保您的预加载脚本 和 Electron的内部逻辑 运行在所加载的webcontent网页 之外的另一个独立的上下文环境里 | 是否允许自定义preload脚本，设置为true后，web页面里面window.require('electron').ipcRenderer会报错
     },
   })
   // mainWindow.loadFile(winURL)
@@ -28,6 +31,12 @@ const createWindow = () => {
 
   // 设置系统托盘
   initAppTray(mainWindow)
+
+  // mainWindow.webContents.on('did-finish-load', () => {
+  //   setInterval(() => {
+  //     mainWindow.webContents.send('appUpdateMessage', '这是主进程的主动搭讪')
+  //   }, 2000)
+  // })
 }
 
 app.whenReady().then(() => {
@@ -35,7 +44,7 @@ app.whenReady().then(() => {
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
-  checkAppUpdate()
+  checkAppUpdate(mainWindow)
   logger.info('app ready~~~~~' + path.dirname(app.getPath('exe')))
 })
 
@@ -49,7 +58,7 @@ ipcMain.on('asynchronous-message', async (event, reply_command) => {
   switch (reply_command) {
     case 'getExePath':
       const data = await getAppConfig().catch((er) => {
-        console.log('getAppConfig error', er)
+        logger.info('getAppConfig error', er)
       })
       event.sender.send(reply_command, data)
       break
@@ -67,8 +76,6 @@ function getAppConfig() {
       ? path.join(__dirname, '../../public/config.json')
       : exeDirName + '/resources/public/config.json'
   }`
-  // console.log('configPath-->', configPath)
-  // console.log('process.env-->', process.env.NODE_ENV)
   return new Promise((resolve, reject) => {
     fs.readFile(configPath, 'utf-8', (err, data) => {
       if (err) {

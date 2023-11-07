@@ -1,12 +1,10 @@
 // 引入 ipcRenderer 模块。
 const { ipcRenderer, contextBridge } = require('electron')
 const fs = require('fs')
-const path = require('path')
 
 let appConfig = null
 contextBridge.exposeInMainWorld('commonAPI', {
   getAppConfig: () => {
-    console.log(123, appConfig)
     return appConfig
   },
   copyFile,
@@ -17,7 +15,7 @@ window.addEventListener('DOMContentLoaded', () => {
   console.log('preload.js --- DOMContentLoaded')
 
   // 使用 ipcRenderer.send 向主进程发送消息。
-  ipcRenderer.send('asynchronous-message', 'getExePath')
+  // ipcRenderer.send('asynchronous-message', 'getExePath')
 
   // 监听主进程返回的消息
   ipcRenderer.on('getExePath', function (event, data) {
