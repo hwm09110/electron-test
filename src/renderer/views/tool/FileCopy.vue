@@ -37,6 +37,7 @@
 
 <script>
   const fs = window.require('fs')
+  const path = window.require('path')
   export default {
     name: 'FileCopy',
     data() {
@@ -123,21 +124,19 @@
       //使用node api copy文件
       copyFile(sourcePath, destinationPath) {
         return new Promise((resolve, _reject) => {
-          // 读取源文件
-          fs.readFile(sourcePath, (err, data) => {
+          // 检查目标目录是否存在
+          const destinationDir = path.dirname(destinationPath)
+          if (!fs.existsSync(destinationDir)) {
+            // 目标目录不存在，先创建目录
+            fs.mkdirSync(destinationDir, { recursive: true })
+          }
+          // 拷贝文件
+          fs.copyFile(sourcePath, destinationPath, (err) => {
             if (err) {
               resolve({ isSuccess: false, path: sourcePath, error: err })
               return
             }
-
-            // 写入目标文件
-            fs.writeFile(destinationPath, data, (err) => {
-              if (err) {
-                resolve({ isSuccess: false, path: sourcePath, error: err })
-                return
-              }
-              resolve({ isSuccess: true, path: sourcePath })
-            })
+            resolve({ isSuccess: true, path: sourcePath })
           })
         })
       },
