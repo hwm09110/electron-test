@@ -1,5 +1,6 @@
 {
-  "local": "D:/workFile/all-php-project/php-project/",
-  "guangdong": "D:/workFile/all-php-project/prodviews95/",
-  "henan": "D:/workFile/all-php-project/prodviews50/"
+  "localDir": "D:/workFile/all-php-project/php-project/",
+  "gdDir": "D:/workFile/all-php-project/prodviews95/",
+  "hnDir": "D:/workFile/all-php-project/prodviews50/",
+  "isSync": false
 }

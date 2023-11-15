@@ -16,7 +16,7 @@ const fs = require('fs')
 //   console.log('preload.js --- DOMContentLoaded')
 
 //   // 使用 ipcRenderer.send 向主进程发送消息。
-//   // ipcRenderer.send('asynchronous-message', 'getExePath')
+//   // ipcRenderer.send('main-asynchronous-message', 'getExePath')
 
 //   // 监听主进程返回的消息
 //   ipcRenderer.on('getExePath', function (event, data) {

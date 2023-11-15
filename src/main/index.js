@@ -71,29 +71,42 @@ if (!gotTheLock) {
 }
 
 // 监听渲染进程发送的消息
-ipcMain.on('asynchronous-message', async (event, reply_command) => {
+ipcMain.on('main-asynchronous-message', async (event, { replyCommand, extraData }) => {
+  console.log('main-asynchronous-message:', replyCommand, extraData)
   // 发送消息到主进程
-  switch (reply_command) {
-    case 'getExePath':
+  switch (replyCommand) {
+    case 'getAppCongfig':
       const data = await getAppConfig().catch((er) => {
         logger.info('getAppConfig error', er)
       })
-      event.sender.send(reply_command, data)
+      logger.info('getAppCongfig', JSON.stringify(data))
+      event.sender.send(replyCommand, data)
+      break
+    case 'setAppCongfig':
+      setAppCongfig(extraData).catch((er) => {
+        logger.info('setAppCongfig error', er)
+      })
+      event.sender.send(replyCommand, data)
       break
 
     default:
-      event.sender.send(reply_command, exePath)
+      event.sender.send(replyCommand, exePath)
       break
   }
 })
 
-function getAppConfig() {
+function getAppConfigPath() {
   const exeDirName = path.dirname(app.getPath('exe')).replace('/\\/g', '/')
   const configPath = `${
     process.env.NODE_ENV == 'development'
       ? path.join(__dirname, '../../public/config.json')
       : exeDirName + '/resources/public/config.json'
   }`
+  return configPath
+}
+// 获取应用配置信息
+function getAppConfig() {
+  const configPath = getAppConfigPath()
   return new Promise((resolve, reject) => {
     fs.readFile(configPath, 'utf-8', (err, data) => {
       if (err) {
@@ -103,5 +116,22 @@ function getAppConfig() {
         resolve(JSON.parse(data))
       }
     })
+  })
+}
+
+// 设置应用配置信息
+function setAppCongfig(data) {
+  logger.info('setAppCongfig-->', data)
+  return new Promise((resolve, reject) => {
+    try {
+      const configPath = getAppConfigPath()
+      const jsonData = JSON.stringify(data, null, 2)
+      fs.writeFileSync(configPath, jsonData, 'utf-8')
+      logger.info('文件写入成功！', jsonData)
+      resolve({ write: 'success', jsonData })
+    } catch (error) {
+      logger.info('写入文件时出错：', error)
+      return reject(error)
+    }
   })
 }

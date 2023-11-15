@@ -1,45 +1,54 @@
 <template>
   <div class="container-wrap">
-    <div class="left">
-      <div class="base-info">
-        <div class="item">
-          <label>根目录(FROM)：</label>
-          <input type="text" class="dir-input" v-model="basicInfo.localDir" />
+    <div class="inner-wrap">
+      <div class="left">
+        <div class="base-info">
+          <div class="set-btn" @click="handleGoSet"
+            ><Icon type="md-cog" size="22" color="#5cadff"
+          /></div>
+          <div class="item">
+            <div class="label">本地根目录(FROM)：</div>
+            <Input class="dir-input" v-model="basicInfo.localDir" />
+          </div>
+          <div class="item">
+            <div class="label">广东根目录(TO)：</div>
+            <Input class="dir-input" v-model="basicInfo.gdDir" />
+          </div>
+          <div class="item">
+            <div class="label">河南根目录(TO)：</div>
+            <Input class="dir-input" v-model="basicInfo.hnDir" />
+          </div>
+          <div class="item">
+            <div class="label">是否同步到河南：</div>
+            <Checkbox v-model="basicInfo.isSync" />
+          </div>
+          <div class="item">
+            <button class="confirm-btn" @click="handleConfirm">确定</button>
+            <!-- <button class="confirm-btn" @click="handleRemoting">远程调用</button> -->
+          </div>
         </div>
-        <div class="item">
-          <label>广东根目录(TO)：</label>
-          <input type="text" class="dir-input" v-model="basicInfo.gdDir" spellcheck="false" />
-        </div>
-        <div class="item">
-          <label>河南根目录(TO)：</label>
-          <input type="text" class="dir-input" v-model="basicInfo.hnDir" spellcheck="false" />
-        </div>
-        <div class="item">
-          <label>是否同步到河南：</label>
-          <input type="checkbox" v-model="basicInfo.syncHeNan" spellcheck="false" />
-        </div>
-        <div class="item">
-          <button class="confirm-btn" @click="handleConfirm">确定</button>
-          <button class="confirm-btn" @click="handleRemoting">远程调用</button>
+        <div>
+          <textarea
+            class="file-info"
+            placeholder="每个文件目录单独一行,列如：views/support/callpool/recharge/rechargedetail.html"
+            v-model="copyfile"
+            spellcheck="false"
+          ></textarea>
         </div>
       </div>
-      <div>
-        <textarea
-          class="file-info"
-          placeholder="每个文件目录单独一行,列如：views/support/callpool/recharge/rechargedetail.html"
-          v-model="copyfile"
-          spellcheck="false"
-        ></textarea>
-      </div>
+      <div class="right" v-html="copyLog"></div>
     </div>
-    <div class="right" v-html="copyLog"></div>
+    <BasicSetModal v-model="showBasicSetModal" :config="basicInfo" @on-success="handleSetSuccess" />
   </div>
 </template>
 
 <script>
   const fs = window.require('fs')
   const path = window.require('path')
+  import BasicSetModal from './components/BasicSetModal.vue'
+
   export default {
+    components: { BasicSetModal },
     name: 'FileCopy',
     data() {
       return {
@@ -47,28 +56,35 @@
           localDir: '',
           gdDir: '',
           hnDir: '',
-          syncHeNan: false,
+          isSync: false,
         },
         copyfile: ``,
         copyLog: '',
         appConfig: null,
+        showBasicSetModal: false,
       }
     },
     watch: {
       appConfig(newVal) {
         if (newVal && Object.keys(newVal).length) {
-          this.basicInfo.localDir = newVal?.local ?? ''
-          this.basicInfo.gdDir = newVal?.guangdong ?? ''
-          this.basicInfo.hnDir = newVal?.henan ?? ''
+          this.basicInfo.localDir = newVal?.localDir ?? ''
+          this.basicInfo.gdDir = newVal?.gdDir ?? ''
+          this.basicInfo.hnDir = newVal?.hnDir ?? ''
+          this.basicInfo.isSync = newVal?.isSync ?? false
         }
       },
     },
     methods: {
+      handleGoSet() {
+        this.showBasicSetModal = true
+      },
+      handleSetSuccess() {
+        this.getAppConfigInfo()
+      },
+
       handleConfirm() {
-        console.log(this.basicInfo)
-        console.log(this.copyfile)
         if (!this.copyfile.trim()) {
-          alert('填写需要copy的文件路径')
+          this.$Message.warning('填写需要copy的文件路径')
           return
         }
         this.copyLog = ''
@@ -103,7 +119,7 @@
         }
 
         // 河南
-        if (this.basicInfo.syncHeNan) {
+        if (this.basicInfo.isSync) {
           this.copyLog += '<br/><br/><br/><h2>【河南】↓↓↓</h2>'
           for (let index = 0, len = copyFilePathList.length; index < len; index++) {
             const path = copyFilePathList[index]
@@ -143,18 +159,17 @@
       },
       // 获取配置
       getAppConfigInfo() {
-        this.$ipcRenderer.once('getExePath', (event, data) => {
-          console.log('监听主进程返回的消息[getExePath]', data)
+        this.$ipcRenderer.once('getAppCongfig', (event, data) => {
           this.appConfig = data
         })
-        this.$ipcRenderer.send('asynchronous-message', 'getExePath')
+        this.$ipcRenderer.send('main-asynchronous-message', { replyCommand: 'getAppCongfig' })
       },
 
       async handleRemoting() {
         const remote = window.require('@electron/remote')
         console.log('remote--->', remote)
 
-        remote.shell.openExternal('https://github.com')
+        // remote.shell.openExternal('https://github.com') //打开本地浏览器
 
         // remote.app.quit()
 
@@ -172,59 +187,69 @@
 
 <style lang="scss" scoped>
   .container-wrap {
-    display: flex;
-    padding: 10px 0;
-    > div {
-      flex: 1;
-      border: 1px solid #dcdcdc;
-      margin: 0 10px;
-      overflow-y: auto;
-      padding: 15px;
-    }
-    .base-info {
-      .item {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-        label {
-          width: 150px;
-          text-align: right;
-          margin-right: 5px;
+    .inner-wrap {
+      display: flex;
+      padding: 10px 0;
+      > div {
+        border: 1px solid #dcdcdc;
+        margin: 0 10px;
+        overflow-y: auto;
+        padding: 15px;
+      }
+      .left {
+        width: 600px;
+      }
+      .right {
+        flex: 1;
+      }
+      .base-info {
+        position: relative;
+        padding-top: 20px;
+        .item {
+          display: flex;
+          align-items: center;
+          margin-bottom: 15px;
+          .label {
+            width: 180px;
+            text-align: right;
+            margin-right: 5px;
+          }
+          .dir-input {
+            width: 400px;
+            padding-left: 10px;
+          }
         }
-        .dir-input {
-          width: 400px;
-          height: 30px;
+        .confirm-btn {
+          width: 120px;
+          height: 35px;
+          line-height: 35px;
+          text-align: center;
           border-radius: 4px;
-          border: 1px solid #dcdcdc;
+          background-color: #108de9;
+          color: #fff;
+          font-size: 14px;
           outline: none;
-          box-sizing: border-box;
-          padding-left: 10px;
+          padding: 0;
+          margin: 0 auto;
+          border: none;
+          cursor: pointer;
+        }
+        .set-btn {
+          position: absolute;
+          top: -10px;
+          right: -10px;
+          cursor: pointer;
         }
       }
-      .confirm-btn {
-        width: 120px;
-        height: 35px;
-        line-height: 35px;
-        text-align: center;
+      .file-info {
+        width: 100%;
+        height: 400px;
         border-radius: 4px;
-        background-color: #108de9;
-        color: #fff;
-        font-size: 14px;
+        padding: 10px;
+        box-sizing: border-box;
+        border: 1px solid #dcdcdc;
         outline: none;
-        padding: 0;
-        margin: 0 auto;
-        border: none;
-        cursor: pointer;
       }
-    }
-    .file-info {
-      width: 100%;
-      height: 400px;
-      border-radius: 4px;
-      padding: 10px;
-      box-sizing: border-box;
-      border: 1px solid #dcdcdc;
-      outline: none;
     }
   }
 </style>
