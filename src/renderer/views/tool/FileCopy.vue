@@ -20,6 +20,7 @@
         </div>
         <div class="item">
           <button class="confirm-btn" @click="handleConfirm">确定</button>
+          <button class="confirm-btn" @click="handleRemoting">远程调用</button>
         </div>
       </div>
       <div>
@@ -147,6 +148,20 @@
           this.appConfig = data
         })
         this.$ipcRenderer.send('asynchronous-message', 'getExePath')
+      },
+
+      async handleRemoting() {
+        const remote = window.require('@electron/remote')
+        console.log('remote--->', remote)
+
+        remote.shell.openExternal('https://github.com')
+
+        // remote.app.quit()
+
+        // const memoryInfo = await remote.app.getAppMetrics()
+        // console.log('memoryInfo', memoryInfo)
+
+        // let win = new remote.BrowserWindow({ width: 800, height: 600 })
       },
     },
     created() {

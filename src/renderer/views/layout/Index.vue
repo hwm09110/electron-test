@@ -1,5 +1,6 @@
 <template>
   <div class="layout">
+    <APPHeader />
     <Layout>
       <Sider ref="side1" hide-trigger collapsible :collapsed-width="78" v-model="isCollapsed">
         <Menu
@@ -41,8 +42,12 @@
 </template>
 
 <script>
+  import APPHeader from './APPHeader.vue'
   export default {
     name: 'LayoutIndex',
+    components: {
+      APPHeader,
+    },
     data() {
       return {
         isCollapsed: false,

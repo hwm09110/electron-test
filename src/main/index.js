@@ -5,6 +5,9 @@ const checkAppUpdate = require('./lib/appUpdate')
 const logger = require('./lib/logger')
 const initAppTray = require('./lib/appTray')
 
+const remote = require('@electron/remote/main')
+remote.initialize()
+
 const winURL =
   process.env.NODE_ENV === 'development'
     ? `http://localhost:9080`
@@ -13,6 +16,8 @@ const winURL =
 let mainWindow
 const createWindow = () => {
   mainWindow = new BrowserWindow({
+    icon: '../../public/icons/favicon.png',
+    frame: false, // false去掉顶部自动导航
     minWidth: 1200,
     height: 750,
     webPreferences: {
@@ -27,6 +32,7 @@ const createWindow = () => {
   mainWindow.loadURL(winURL)
   // 打开开发工具
   mainWindow.webContents.openDevTools()
+  remote.enable(mainWindow.webContents)
 
   // 设置系统托盘
   initAppTray(mainWindow)
@@ -50,6 +56,19 @@ app.whenReady().then(() => {
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 })
+
+// 限制只能打开一个页面
+const gotTheLock = app.requestSingleInstanceLock()
+if (!gotTheLock) {
+  app.quit()
+} else {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore()
+      mainWindow.focus()
+    }
+  })
+}
 
 // 监听渲染进程发送的消息
 ipcMain.on('asynchronous-message', async (event, reply_command) => {

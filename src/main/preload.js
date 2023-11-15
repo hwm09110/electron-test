@@ -1,28 +1,29 @@
-// 引入 ipcRenderer 模块。
-const { ipcRenderer, contextBridge } = require('electron')
+// const { ipcRenderer, contextBridge } = require('electron')
 const fs = require('fs')
 
-let appConfig = null
-contextBridge.exposeInMainWorld('commonAPI', {
-  getAppConfig: () => {
-    return appConfig
-  },
-  copyFile,
-  checkAppUpdate,
-})
+// const mainWin = getCurrentWindow()
 
-window.addEventListener('DOMContentLoaded', () => {
-  console.log('preload.js --- DOMContentLoaded')
+// let appConfig = null
+// contextBridge.exposeInMainWorld('commonAPI', {
+//   getAppConfig: () => {
+//     return appConfig
+//   },
+//   copyFile,
+//   getNumbers,
+// })
 
-  // 使用 ipcRenderer.send 向主进程发送消息。
-  // ipcRenderer.send('asynchronous-message', 'getExePath')
+// window.addEventListener('DOMContentLoaded', () => {
+//   console.log('preload.js --- DOMContentLoaded')
 
-  // 监听主进程返回的消息
-  ipcRenderer.on('getExePath', function (event, data) {
-    console.log('监听主进程返回的消息', data)
-    appConfig = data
-  })
-})
+//   // 使用 ipcRenderer.send 向主进程发送消息。
+//   // ipcRenderer.send('asynchronous-message', 'getExePath')
+
+//   // 监听主进程返回的消息
+//   ipcRenderer.on('getExePath', function (event, data) {
+//     console.log('监听主进程返回的消息', data)
+//     appConfig = data
+//   })
+// })
 
 function copyFile(sourcePath, destinationPath) {
   return new Promise((resolve, _reject) => {
@@ -45,6 +46,11 @@ function copyFile(sourcePath, destinationPath) {
   })
 }
 
-function checkAppUpdate() {
-  ipcRenderer.send('check-for-update')
+function getNumbers() {
+  return Array.from({ length: 10 }, (n, i) => i + 1)
+}
+
+module.exports = {
+  copyFile,
+  getNumbers,
 }
