@@ -16,22 +16,22 @@ const exePath = path.dirname(app.getPath('exe')) // 获取到安装目录的文�
 logger.transports.file.resolvePathFn = () => `${exePath}\\log\\${dateStr}.log`
 
 module.exports = {
-  info(args) {
-    logger.info(args)
+  info(...args) {
+    logger.info(args.join(' '))
   },
-  warn(args) {
-    logger.warn(args)
+  warn(...args) {
+    logger.warn(args.join(' '))
   },
-  error(args) {
-    logger.error(args)
+  error(...args) {
+    logger.error(args.join(' '))
   },
-  debug(args) {
-    logger.debug(args)
+  debug(...args) {
+    logger.debug(args.join(' '))
   },
-  verbose(args) {
-    logger.verbose(args)
+  verbose(...args) {
+    logger.verbose(args.join(' '))
   },
-  silly(args) {
-    logger.silly(args)
+  silly(...args) {
+    logger.silly(args.join(' '))
   },
 }
