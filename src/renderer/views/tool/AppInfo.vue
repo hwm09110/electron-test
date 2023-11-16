@@ -37,8 +37,12 @@
         ],
         isChecking: false,
         donwloadPercentage: 0,
-        btnText: '检查更新',
       }
+    },
+    computed: {
+      btnText() {
+        return this.isChecking ? '正在检查更新' : '检查更新'
+      },
     },
     methods: {
       handleCheckUpdate() {
@@ -66,7 +70,6 @@
             })
             break
           case 3: //正在检查更新
-            this.btnText = '正在检查更新...'
             this.isChecking = true
             break
           case 4: //检查到有新版本
@@ -88,7 +91,6 @@
               content: `已经是最新版本！`,
               onOk: () => {
                 this.isChecking = false
-                this.btnText = '检查更新'
               },
             })
             break
@@ -97,7 +99,6 @@
             this.donwloadPercentage = parseFloat(data.progress.percent.toFixed(2))
             break
           case 7: //下载完成
-            this.btnText = '检查更新'
             this.isChecking = false
             setTimeout(() => {
               this.$Modal.confirm({

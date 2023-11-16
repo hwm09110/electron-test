@@ -31,7 +31,7 @@ function checkAppUpdate(win) {
       .downloadUpdate()
       .then((downloadPath) => {
         logger.info('autoUpdater 新版本下载完成')
-        logger.info('dowload path:' + downloadPath)
+        logger.info('dowload path:', downloadPath)
       })
       .catch((error) => {
         logger.error('新版本下载失败：', JSON.stringify(error))
@@ -52,7 +52,7 @@ function checkAppUpdate(win) {
 
   // 检测下载错误
   autoUpdater.on('error', (error) => {
-    logger.info('autoUpdater error' + JSON.stringify(error))
+    logger.info('autoUpdater error', error)
     sendUpdateMsg({ status: 2, event: 'error', msg: '检查更新异常:' + error })
   })
 
@@ -64,7 +64,7 @@ function checkAppUpdate(win) {
 
   // 检测到可以更新时
   autoUpdater.on('update-available', (releaseInfo) => {
-    logger.info('autoUpdater 检测到新版本，确认是否下载', JSON.stringify(releaseInfo))
+    logger.info('autoUpdater 检测到新版本，确认是否下载', releaseInfo)
     sendUpdateMsg({ status: 4, event: 'update-available', msg: '检查到有新版本:', releaseInfo })
     const releaseNotes = releaseInfo.releaseNotes
     let releaseContent = ''
@@ -79,23 +79,6 @@ function checkAppUpdate(win) {
     } else {
       releaseContent = '暂无更新说明'
     }
-    // 弹框确认是否下载更新（releaseContent是更新日志）
-    // dialog
-    //   .showMessageBox({
-    //     type: 'info',
-    //     title: '应用有新的更新',
-    //     detail: releaseContent,
-    //     message: '发现新版本，是否现在更新？',
-    //     buttons: ['否', '是'],
-    //   })
-    //   .then(({ response }) => {
-    //     if (response === 1) {
-    //       // 下载更新
-    //       autoUpdater.downloadUpdate().then((downloadPath) => {
-    //         logger.info('dowload path:' + downloadPath)
-    //       })
-    //     }
-    //   })
   })
 
   // 检测到不需要更新时
@@ -110,7 +93,7 @@ function checkAppUpdate(win) {
 
   // 更新下载进度
   autoUpdater.on('download-progress', (progress) => {
-    logger.info('autoUpdater 下载进度' + JSON.stringify(progress))
+    logger.info('autoUpdater 下载进度', progress)
     sendUpdateMsg({ status: 6, event: 'download-progress', msg: '正在下载', progress })
   })
 
@@ -119,15 +102,6 @@ function checkAppUpdate(win) {
     console.info('下载完成，准备更新')
     logger.info('autoUpdater 下载完成，准备更新')
     sendUpdateMsg({ status: 7, event: 'update-downloaded', msg: '下载完成' })
-    // dialog
-    //   .showMessageBox({
-    //     title: '安装更新',
-    //     message: '更新下载完毕，应用将重启并进行安装',
-    //   })
-    //   .then(() => {
-    //     // 退出并安装应用
-    //     setImmediate(() => autoUpdater.quitAndInstall())
-    //   })
   })
 
   function sendUpdateMsg(data) {

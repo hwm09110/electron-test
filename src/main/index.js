@@ -36,12 +36,6 @@ const createWindow = () => {
 
   // 设置系统托盘
   initAppTray(mainWindow)
-
-  // mainWindow.webContents.on('did-finish-load', () => {
-  //   setInterval(() => {
-  //     mainWindow.webContents.send('appUpdateMessage', '这是主进程的主动搭讪')
-  //   }, 2000)
-  // })
 }
 
 app.whenReady().then(() => {

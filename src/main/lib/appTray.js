@@ -1,7 +1,8 @@
 /* 系统托盘 */
-const { Menu, Tray, app } = require('electron')
+const { Menu, Tray, app, shell } = require('electron')
 const path = require('path')
 const pkg = require('../../../package.json')
+const logger = require('./logger')
 // 注意这里是全局定义这个隐藏到系统托盘变量，不然下面 new Tray 会报错
 
 module.exports = function initAppTray(win) {
@@ -25,11 +26,24 @@ module.exports = function initAppTray(win) {
   tray = new Tray(file_path)
   const contextMenu = Menu.buildFromTemplate([
     {
+      label: '日志',
+      click: () => {
+        const logDir = path.dirname(app.getPath('exe')) + '\\log'
+        logger.info('logDir', logDir)
+        try {
+          shell.openPath(logDir)
+        } catch (error) {
+          logger.info('openPath catch error', error)
+        }
+      },
+    },
+    {
       label: '退出',
       click: () => {
+        //这里直接强制退出
         win.destroy()
       },
-    }, //我们需要在这里有一个真正的退出（这里直接强制退出）
+    },
   ])
   tray.setToolTip(pkg.name)
   tray.setContextMenu(contextMenu)
