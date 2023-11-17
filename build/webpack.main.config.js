@@ -54,14 +54,14 @@ let mainConfig = {
   output: {
     filename: '[name].js',
     libraryTarget: 'commonjs2',
-    path: path.join(__dirname, '../dist/electron'),
+    path: path.join(__dirname, '../dist/electron/main'),
   },
   plugins: [
     new webpack.NoEmitOnErrorsPlugin(),
     new CopyWebpackPlugin([
       {
         from: path.join(__dirname, '../src/main/preload.js'),
-        to: path.join(__dirname, '../dist/electron/preload.js'),
+        to: path.join(__dirname, '../dist/electron/main/preload.js'),
       },
     ]),
   ],

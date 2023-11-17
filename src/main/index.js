@@ -11,7 +11,7 @@ remote.initialize()
 const winURL =
   process.env.NODE_ENV === 'development'
     ? `http://localhost:9080`
-    : `file://${__dirname}/index.html`
+    : `file://${path.resolve(__dirname, '..')}/renderer/index.html`
 
 let mainWindow
 const createWindow = () => {
@@ -21,7 +21,8 @@ const createWindow = () => {
     minWidth: 1200,
     height: 750,
     webPreferences: {
-      devTools: process.env.NODE_ENV === 'development',
+      // devTools: process.env.NODE_ENV === 'development',
+      devTools: true,
       // preload: path.join(__dirname, 'preload.js'),
       enableRemoteModule: true,
       nodeIntegration: true, // 是否允许web端使用node
@@ -93,7 +94,7 @@ function getAppConfigPath() {
   const exeDirName = path.dirname(app.getPath('exe')).replace('/\\/g', '/')
   const configPath = `${
     process.env.NODE_ENV == 'development'
-      ? path.join(__dirname, '../../public/config.json')
+      ? path.join(__dirname, '../../../public/config.json')
       : exeDirName + '/resources/public/config.json'
   }`
   return configPath

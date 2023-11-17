@@ -21,7 +21,7 @@ const { VueLoaderPlugin } = require('vue-loader')
  */
 let whiteListedModules = ['vue']
 
-let outPath = path.join(__dirname, '../dist/electron')
+let outPath = path.join(__dirname, '../dist/electron/renderer')
 if (process.env.BUILD_TARGET === 'web') {
   outPath = path.join(__dirname, '../dist/web')
 }
@@ -170,7 +170,7 @@ let rendererConfig = {
     // new webpack.NoEmitOnErrorsPlugin(),
   ],
   output: {
-    filename: '[name].js',
+    filename: '[name].[hash:8].js',
     // libraryTarget: 'commonjs2',
     path: outPath,
   },
