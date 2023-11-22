@@ -23,12 +23,12 @@
 
 <script>
   import { mapMutations, mapState } from 'vuex'
-  const { getCurrentWindow } = window.require('@electron/remote')
+
   export default {
     name: 'APPHeader',
     data() {
       return {
-        isWinMax: getCurrentWindow().isMaximized(), // 是否窗口最大化
+        isWinMax: false, // 是否窗口最大化
       }
     },
     computed: {
@@ -37,6 +37,7 @@
     methods: {
       ...mapMutations(['setAppOnTopStatus']),
       handleOperate(opType) {
+        const { getCurrentWindow } = window.require('@electron/remote')
         const mainWin = getCurrentWindow()
         switch (Number(opType)) {
           case 1: // 刷新

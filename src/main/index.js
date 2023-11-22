@@ -1,7 +1,7 @@
 const path = require('path')
 const fs = require('fs')
 const { app, BrowserWindow, ipcMain } = require('electron')
-const checkAppUpdate = require('./lib/appUpdate')
+const { initAppUpdate } = require('./lib/appUpdate')
 const logger = require('./lib/logger')
 const initAppTray = require('./lib/appTray')
 
@@ -21,16 +21,21 @@ const createWindow = () => {
     minWidth: 1200,
     height: 750,
     webPreferences: {
-      // devTools: process.env.NODE_ENV === 'development',
-      devTools: true,
+      devTools: process.env.NODE_ENV === 'development',
       // preload: path.join(__dirname, 'preload.js'),
       enableRemoteModule: true,
       nodeIntegration: true, // 是否允许web端使用node
       contextIsolation: false, // 上下文隔离功能将确保您的预加载脚本 和 Electron的内部逻辑 运行在所加载的webcontent网页 之外的另一个独立的上下文环境里 | 是否允许自定义preload脚本，设置为true后，web页面里面window.require('electron').ipcRenderer会报错
     },
   })
-  // mainWindow.loadFile(winURL)
-  mainWindow.loadURL(winURL)
+  if (process.env.NODE_ENV === 'production') {
+    // 从app.asar分离renderer
+    const exeDirName = path.dirname(app.getPath('exe')).replace('/\\/g', '/')
+    const webURL = `file://${exeDirName}/resources/app.asar.unpacked/dist/electron/renderer/index.html`
+    mainWindow.loadURL(webURL)
+  } else {
+    mainWindow.loadURL(winURL)
+  }
   // 打开开发工具
   mainWindow.webContents.openDevTools()
   remote.enable(mainWindow.webContents)
@@ -44,8 +49,9 @@ app.whenReady().then(() => {
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
-  checkAppUpdate(mainWindow)
+  initAppUpdate(mainWindow)
   logger.info('app ready~~~~~' + path.dirname(app.getPath('exe')))
+  logger.info('__dirname：' + __dirname)
 })
 
 app.on('window-all-closed', () => {

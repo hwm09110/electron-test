@@ -50,10 +50,11 @@
         this.$ipcRenderer.send('check-for-update')
       },
       initAppUpdateEventHandler() {
-        // this.$ipcRenderer.off('appUpdateMessage', this.updateHandler)
-        this.$ipcRenderer.on('appUpdateMessage', this.updateHandler)
+        this.$ipcRenderer.on('appUpdateMessage', this.updateAppHandler)
+        this.$ipcRenderer.on('patchUpdateMessage', this.updatePatchHandler)
       },
-      updateHandler(ev, data) {
+      // 全量更新
+      updateAppHandler(ev, data) {
         console.log('appUpdateMessage message ---> ', data)
         const { status } = data
         switch (Number(status)) {
@@ -114,6 +115,23 @@
             break
         }
       },
+      // 局部更新（只更新渲染进程）
+      updatePatchHandler(ev, data) {
+        console.log('updatePatchHandler message ---> ', data)
+        const { status, msg } = data
+        if (status === 'success') {
+          this.$Notice.success({
+            title: '通知',
+            desc: '新版本更新完成！',
+            duration: 0,
+            onClose() {
+              const remote = window.require('@electron/remote')
+              console.log('remote--->', remote)
+              remote.getCurrentWebContents().reload()
+            },
+          })
+        }
+      },
     },
     mounted() {
       console.log('package', pkg)
@@ -121,7 +139,7 @@
       this.initAppUpdateEventHandler()
     },
     destroyed() {
-      this.$ipcRenderer.off('appUpdateMessage', this.updateHandler)
+      this.$ipcRenderer.off('appUpdateMessage', this.updateAppHandler)
     },
   }
 </script>

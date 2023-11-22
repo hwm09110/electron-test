@@ -22,7 +22,6 @@
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.18.6",
     "@babel/plugin-proposal-optional-chaining": "^7.21.0",
     "@babel/preset-env": "^7.23.2",
-    "adm-zip": "^0.5.10",
     "babel-loader": "^8.2.5",
     "babel-minify-webpack-plugin": "^0.3.1",
     "babel-plugin-transform-runtime": "^6.23.0",
@@ -60,6 +59,7 @@
   },
   "dependencies": {
     "@electron/remote": "^2.1.0",
+    "adm-zip": "^0.5.10",
     "core-js": "^3.33.1",
     "electron-log": "^5.0.0",
     "view-design": "^4.7.0",
@@ -70,16 +70,27 @@
   "build": {
     "productName": "electron-demo",
     "appId": "456789",
+    "copyright": "Copyright©2023hwm",
     "directories": {
       "output": "pack"
     },
+    "afterPack": "./build/afterpack.js",
     "files": [
       "dist/electron/**/*"
+    ],
+    "asarUnpack": [
+      "**/renderer/**/*",
+      "**/node_modules/**/*",
+      "**/package.json"
     ],
     "extraResources": [
       {
         "from": "./public",
         "to": "./public"
+      },
+      {
+        "from": "./hotVersion.json",
+        "to": "./hotVersion.json"
       }
     ],
     "nsis": {

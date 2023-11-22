@@ -28,6 +28,8 @@ jobs:
             pack/*.exe
             pack/*.exe.blockmap
             pack/latest.yml
+            pack/hotVersion.json
+            pack/unpacked.zip
           draft: false
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
