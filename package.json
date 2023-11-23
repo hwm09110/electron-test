@@ -74,6 +74,7 @@
     "directories": {
       "output": "pack"
     },
+    "afterPack": "./build/afterpack.js",
     "files": [
       "dist/electron/**/*"
     ],
