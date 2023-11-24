@@ -1,11 +1,11 @@
 <template>
   <div class="container-wrap">
     <div class="base-info">
-      <div class="item" v-for="(item, index) of appInfo" :key="index">
-        <label>{{ item.name }}：</label>
+      <div class="item">
+        <label>version：</label>
         <div class="content">
           <p
-            >{{ item.content }} &nbsp;&nbsp;<Button
+            >V{{ majorVersion }} &nbsp;&nbsp;<Button
               @click="handleCheckUpdate"
               :disabled="isChecking"
               >{{ btnText }}</Button
@@ -19,24 +19,35 @@
           /></p>
         </div>
       </div>
+      <div class="item">
+        <label>patchVersion：</label>
+        <div class="content">
+          <p
+            >V{{ patchVersion }} &nbsp;&nbsp;<Button
+              @click="handleCheckPatchUpdate"
+              :disabled="isChecking"
+              >{{ btnText }}</Button
+            >
+            <span> {{ updatePatchMsg }}</span>
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
   const pkg = require('../../../../package.json')
+  const patch = require('../../../../hotVersion.json')
   export default {
     name: 'AppInfo',
     data() {
       return {
-        appInfo: [
-          {
-            name: 'version',
-            content: 'V' + pkg.version,
-          },
-        ],
+        majorVersion: pkg.version,
+        patchVersion: patch.version,
         isChecking: false,
         donwloadPercentage: 0,
+        updatePatchMsg: '',
       }
     },
     computed: {
@@ -48,6 +59,10 @@
       handleCheckUpdate() {
         if (this.isChecking) return false
         this.$ipcRenderer.send('check-for-update')
+      },
+      handleCheckPatchUpdate() {
+        if (this.isChecking) return false
+        this.$ipcRenderer.send('check-patch-update')
       },
       initAppUpdateEventHandler() {
         this.$ipcRenderer.on('appUpdateMessage', this.updateAppHandler)
@@ -115,10 +130,12 @@
             break
         }
       },
-      // 局部更新（只更新渲染进程）
+      // 增量更新（只更新渲染进程）
       updatePatchHandler(ev, data) {
         console.log('updatePatchHandler message ---> ', data)
         const { status, msg } = data
+        this.isChecking = true
+        this.updatePatchMsg = msg
         if (status === 'success') {
           this.$Notice.success({
             title: '通知',
@@ -130,6 +147,14 @@
               remote.getCurrentWebContents().reload()
             },
           })
+        } else if (status === 'pending') {
+        } else if (status === 'finish') {
+          this.$Message.info('已经是最新版本啦')
+          this.isChecking = false
+          this.updatePatchMsg = ''
+        } else {
+          this.isChecking = false
+          this.updatePatchMsg = ''
         }
       },
     },
@@ -161,6 +186,8 @@
         .content {
           color: #666;
           font-size: 14px;
+          display: flex;
+          align-items: center;
         }
       }
     }

@@ -22,7 +22,7 @@ exports.default = async function (context) {
     path.join(context.outDir, 'hotVersion.json'),
     JSON.stringify(
       {
-        version: require('../hotVersion.json'),
+        version: require('../hotVersion.json').version,
       },
       null,
       2,

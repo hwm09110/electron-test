@@ -20,8 +20,10 @@ Object.defineProperty(app, 'isPackaged', {
 // dev-end
 
 let mainWin = null
-const getLatestPatchVersionUrl = 'http://192.168.8.172:3600/resource/app/pack/hotVersion.json'
-const getLatestPatchZipUrl = 'http://192.168.8.172:3600/resource/app/pack/unpacked.zip'
+const getLatestPatchVersionUrl =
+  'http://192.168.8.172:3600/resource/app/pack/hotVersion.json?t' + Date.now()
+const getLatestPatchZipUrl =
+  'http://192.168.8.172:3600/resource/app/pack/unpacked.zip?t' + Date.now()
 
 function initAppUpdate(win, autoCheck = false) {
   mainWin = win
@@ -30,6 +32,12 @@ function initAppUpdate(win, autoCheck = false) {
     autoUpdater.checkForUpdates()
     logger.info('autoUpdater触发检查更新check-for-update')
     sendUpdateMsg({ status: 1, event: 'checkForUpdates', msg: '触发检查更新' })
+  })
+
+  // 检查是否有增量更新
+  ipcMain.on('check-patch-update', () => {
+    logger.info('触发检查更新check-patch-update')
+    checkPatckUpdate()
   })
 
   ipcMain.on('download-update', () => {
@@ -93,8 +101,6 @@ function initAppUpdate(win, autoCheck = false) {
   autoUpdater.on('update-not-available', () => {
     logger.info('autoUpdater 现在使用的就是最新版本，不用更新')
     sendUpdateMsg({ status: 5, event: 'update-not-available', msg: '没有新版本' })
-    // 检查是否有增量更新
-    checkPatckUpdate()
   })
 
   // 更新下载进度
@@ -372,23 +378,25 @@ async function checkPatckUpdate() {
 
     logger.info(`currentVersion：${curVersion},latestVersion：${remoteVersion}`)
     if (curVersion != remoteVersion) {
-      sendPatchUpdateMsg({ status: 'start' })
+      sendPatchUpdateMsg({ status: 'start', msg: `开始下载更新包` })
       await downloadHotPackFileZip(unpatchZipPath)
+      sendPatchUpdateMsg({ status: 'pending', msg: `开始下载更新包` })
       if (isDirectoryExists(appOldPath)) {
-        logger.info('存在旧备份文件')
+        sendPatchUpdateMsg({ status: 'pending', msg: `删除旧的备份文件` })
         deleteFolderRecursiveAsync(appOldPath, (er) => {
           if (er) {
-            logger.error('删除旧备份文件出错', er)
             sendPatchUpdateMsg({ status: 'error', msg: '删除旧备份文件出错' + er })
             return
           }
-          logger.info('删除旧备份文件完成')
+          sendPatchUpdateMsg({ status: 'pending', msg: `删除旧备份文件完成` })
           doUpdatePatch(appPath, appOldPath, unpatchZipPath, remoteVersion)
         })
       } else {
-        logger.info('不存在旧备份文件')
+        sendPatchUpdateMsg({ status: 'pending', msg: `不存在旧备份文件` })
         doUpdatePatch(appPath, appOldPath, unpatchZipPath, remoteVersion)
       }
+    } else {
+      sendPatchUpdateMsg({ status: 'finish', msg: `已经是最新版本啦` })
     }
   } catch (er) {
     logger.error('checkPatckUpdate', er)
@@ -398,28 +406,34 @@ async function checkPatckUpdate() {
 
 // 更新补丁
 function doUpdatePatch(appPath, appOldPath, unpatchZipPath, remoteVersion) {
+  sendPatchUpdateMsg({ status: 'pending', msg: `备份文件`, extra: `${appPath}到：${appOldPath}` })
   copyFolderRecursiveAsync(appPath, appOldPath, (er) => {
     if (er) {
-      logger.error('备份出错', er)
       sendPatchUpdateMsg({ status: 'error', msg: '备份出错' + er })
       return
     }
     logger.info('备份完成')
+    sendPatchUpdateMsg({ status: 'pending', msg: `备份完成` })
     const zip = new AdmZip(unpatchZipPath)
+    sendPatchUpdateMsg({ status: 'pending', msg: `开始解压增量包` })
     zip.extractAllToAsync(appPath, true, (er) => {
       if (er) {
-        logger.error('增量包解压失败：', er)
         sendPatchUpdateMsg({ status: 'error', msg: '增量包解压失败：' + er })
         // 恢复备份
+        sendPatchUpdateMsg({ status: 'pending', msg: `开始恢复备份` })
         fs.rename(appOldPath, appPath, (er) => {
-          logger.error('恢复备份失败：', er)
-          sendPatchUpdateMsg({ status: 'error', msg: '恢复备份失败：' + er })
+          if (er) {
+            sendPatchUpdateMsg({ status: 'error', msg: '恢复备份失败：' + er })
+            return
+          }
+          sendPatchUpdateMsg({ status: 'pending', msg: `恢复备份完成` })
         })
         return
       }
-      logger.info('增量包解压完成')
+      sendPatchUpdateMsg({ status: 'pending', msg: `增量包解压完成` })
       // 更新本地hotVersion的版本号
       const hotVerPath = `${getAppExeDir()}/resources/hotVersion.json`
+      sendPatchUpdateMsg({ status: 'pending', msg: `更新本地hotVersion的版本号` })
       fs.writeFile(
         hotVerPath,
         JSON.stringify(
@@ -435,8 +449,8 @@ function doUpdatePatch(appPath, appOldPath, unpatchZipPath, remoteVersion) {
             sendPatchUpdateMsg({ status: 'error', msg: '更新本地hotVersion的版本号失败：' + er })
             return
           }
-          logger.info('更新本地hotVersion的版本号完成')
-          sendPatchUpdateMsg({ status: 'success' })
+
+          sendPatchUpdateMsg({ status: 'success', msg: '更新本地hotVersion的版本号完成' })
         },
       )
     })
@@ -444,6 +458,7 @@ function doUpdatePatch(appPath, appOldPath, unpatchZipPath, remoteVersion) {
 }
 
 function sendPatchUpdateMsg(data) {
+  logger[data?.status == 'error' ? 'error' : 'info'](data)
   mainWin.webContents.send('patchUpdateMessage', data)
 }
 
