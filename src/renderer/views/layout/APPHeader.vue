@@ -5,15 +5,20 @@
     </div>
     <div class="right-area no-drag">
       <ul class="win-operate">
-        <li class="item" @click="handleOperate(1)"
+        <li class="item" @click="handleOperate('refresh')"
           ><Icon type="ios-refresh-circle-outline" class="icon"
         /></li>
-        <li class="item" @click="handleOperate(2)"><Icon type="ios-cog-outline" class="icon" /></li>
-        <li class="item" @click="handleOperate(3)"><Icon type="ios-remove" class="icon" /></li>
-        <li class="item" @click="handleOperate(4)"
+        <li class="item" @click="handleOperate('set')"
+          ><Icon type="ios-cog-outline" class="icon"
+        /></li>
+        <li class="item" @click="handleOperate('lock')"
+          ><Icon type="ios-lock-outline" class="icon"
+        /></li>
+        <li class="item" @click="handleOperate('mini')"><Icon type="ios-remove" class="icon" /></li>
+        <li class="item" @click="handleOperate('maxi')"
           ><Icon :type="isWinMax ? 'ios-browsers-outline' : 'ios-square-outline'" class="icon"
         /></li>
-        <li class="item close-btn" @click="handleOperate(5)"
+        <li class="item close-btn" @click="handleOperate('close')"
           ><Icon type="ios-close" class="icon"
         /></li>
       </ul>
@@ -36,23 +41,26 @@
     },
     methods: {
       ...mapMutations(['setAppOnTopStatus']),
-      handleOperate(opType) {
-        const { getCurrentWindow } = window.require('@electron/remote')
+      handleOperate(opName) {
+        const { getCurrentWindow, getCurrentWebContents } = window.require('@electron/remote')
         const mainWin = getCurrentWindow()
-        switch (Number(opType)) {
-          case 1: // 刷新
+        switch (String(opName)) {
+          case 'refresh': // 刷新
+            getCurrentWebContents().reload()
             break
-          case 2: // 设置
+          case 'set': // 设置
+            break
+          case 'lock': // 设置置顶
             this.setAppOnTopStatus(!this.isAppOnTop)
             this.$nextTick(() => {
               // 设置置顶
               mainWin.setAlwaysOnTop(this.isAppOnTop)
             })
             break
-          case 3: // 最小化
+          case 'mini': // 最小化
             mainWin.minimize()
             break
-          case 4: // 最大化
+          case 'maxi': // 最大化
             if (mainWin.isMaximized()) {
               // mainWin.unmaximize() // 向下还原
               mainWin.restore() // 向下还原
@@ -61,7 +69,7 @@
             }
             this.isWinMax = mainWin.isMaximized()
             break
-          case 5: // 关闭
+          case 'close': // 关闭
             mainWin.close()
             break
         }

@@ -167,6 +167,9 @@ let rendererConfig = {
       // nodeModules:
       //   process.env.NODE_ENV !== 'production' ? path.resolve(__dirname, '../node_modules') : false,
     }),
+    new webpack.DefinePlugin({
+      'process.env.BUILD_TARGET': JSON.stringify(process.env.BUILD_TARGET),
+    }),
     // new webpack.NoEmitOnErrorsPlugin(),
   ],
   output: {

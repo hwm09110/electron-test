@@ -107,7 +107,10 @@
         this.copyLog += '<h2>【广东】↓↓↓</h2>'
         for (let index = 0, len = copyFilePathList.length; index < len; index++) {
           const path = copyFilePathList[index]
-          const res = await this.copyFile(this.basicInfo.localDir + path, this.basicInfo.gdDir + path)
+          const res = await this.copyFile(
+            this.basicInfo.localDir + path,
+            this.basicInfo.gdDir + path,
+          )
           console.log(res)
           this.copyLog += `<br/><div><strong style="color:${
             res.isSuccess ? '#19be6b' : '#ed4014'

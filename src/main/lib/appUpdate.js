@@ -20,10 +20,8 @@ Object.defineProperty(app, 'isPackaged', {
 // dev-end
 
 let mainWin = null
-const getLatestPatchVersionUrl =
-  'http://192.168.8.172:3600/resource/app/pack/hotVersion.json?t' + Date.now()
-const getLatestPatchZipUrl =
-  'http://192.168.8.172:3600/resource/app/pack/unpacked.zip?t' + Date.now()
+const getLatestPatchVersionUrl = 'http://192.168.8.172:3600/resource/app/pack/hotVersion.json'
+const getLatestPatchZipUrl = 'http://192.168.8.172:3600/resource/app/pack/unpacked.zip'
 
 function initAppUpdate(win, autoCheck = false) {
   mainWin = win
@@ -143,7 +141,7 @@ function getCurrrentPatchVersion() {
 function getRemotePatchVersion() {
   return new Promise((resolve, reject) => {
     const request = net.request({
-      url: getLatestPatchVersionUrl,
+      url: getLatestPatchVersionUrl + `?t=${Date.now()}`,
       method: 'get',
     })
     request.on('response', (response) => {
@@ -173,7 +171,7 @@ function downloadHotPackFileZip(targetPath) {
   return new Promise((resolve, reject) => {
     try {
       const request = net.request({
-        url: getLatestPatchZipUrl,
+        url: getLatestPatchZipUrl + `?t=${Dat.now()}`,
         method: 'get',
       })
 
