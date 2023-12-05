@@ -23,17 +23,21 @@
         /></li>
       </ul>
     </div>
+    <SetSysModal v-model="showSetSysModal" />
   </div>
 </template>
 
 <script>
   import { mapMutations, mapState } from 'vuex'
+  import SetSysModal from '../components/SetSysModal.vue'
 
   export default {
     name: 'APPHeader',
+    components: { SetSysModal },
     data() {
       return {
         isWinMax: false, // 是否窗口最大化
+        showSetSysModal: false,
       }
     },
     computed: {
@@ -49,6 +53,7 @@
             getCurrentWebContents().reload()
             break
           case 'set': // 设置
+            this.showSetSysModal = true
             break
           case 'lock': // 设置置顶
             this.setAppOnTopStatus(!this.isAppOnTop)

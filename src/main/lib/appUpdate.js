@@ -171,7 +171,7 @@ function downloadHotPackFileZip(targetPath) {
   return new Promise((resolve, reject) => {
     try {
       const request = net.request({
-        url: getLatestPatchZipUrl + `?t=${Dat.now()}`,
+        url: getLatestPatchZipUrl + `?t=${Date.now()}`,
         method: 'get',
       })
 

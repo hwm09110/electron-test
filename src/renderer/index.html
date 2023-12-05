@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-  <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->
-    <title>~工具箱~</title>
-  </head>
 
-  <body>
-    <div id="app"></div>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->
+  <title>~工具箱~</title>
+</head>
+
+<body>
+  <div id="app"></div>
+
+  <% if(process.env.BUILD_TARGET=='web' ) { %>
+    <script>
+      /* 解决web环境下缺少window.require方法报错 */
+      window.require = (...arg) => ({})
+    </script>
+    <% } %>
+</body>
+
 </html>
