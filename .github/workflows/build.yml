@@ -2,8 +2,10 @@ name: build
 
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - master-packencry
+    # tags:
+    #   - '*'
 jobs:
   build:
     runs-on: windows-latest
