@@ -1,6 +1,6 @@
 # electron-demo
 
-### 开发构建 🎃
+## 开发构建 🎃
 
 ```bash
 # 开发
@@ -12,7 +12,7 @@ yarn build:app
 
 TIP：打包使用 npm，不用用 yarn
 
-### 发布配置 🎁
+## 发布配置 🎁
 
 方式 1： package.json
 
@@ -50,7 +50,7 @@ url: 'http://192.168.8.172:3600/resource/app/pack/'
 
 ```
 
-### 版本更新 🎈
+## 版本更新 🎈
 
 1.全量更新
 
@@ -71,7 +71,7 @@ git tag 跟version相同
 }
 ```
 
-### 注意事项 💡
+## 注意事项 💡
 
 问题 1. 使用 bytenode 加密打包主进程文件成功后,运行应用大概率 Invalid or incompatible cached data (cachedDataRejected)
 
@@ -93,7 +93,7 @@ yarn config set registry https://registry.npmmirror.com/
 yarn config set electron_mirror https://npm.taobao.org/mirrors/electron/
 ```
 
-### 其他 🎃
+## 其他 🎃
 
 1. 打包使用 asar 模式, 如果要分离主进程与渲染进程文件，只更更新渲染进程文件，可按如下处理：
 

@@ -63,6 +63,11 @@
             id: '2',
             path: '/tool/appInfo',
           },
+          {
+            name: 'README',
+            id: '3',
+            path: '/tool/readme',
+          },
         ],
       }
     },

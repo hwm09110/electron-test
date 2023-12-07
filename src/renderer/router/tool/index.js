@@ -1,5 +1,6 @@
 const FileCopy = () => import(/* webpackChunkName: "tool" */ '../../views/tool/FileCopy')
 const AppInfo = () => import(/* webpackChunkName: "tool" */ '../../views/tool/AppInfo')
+const Readme = () => import(/* webpackChunkName: "tool" */ '../../views/tool/Readme')
 
 export default [
   {
@@ -13,5 +14,11 @@ export default [
     name: 'AppInfo',
     component: AppInfo,
     meta: { title: '应用信息' },
+  },
+  {
+    path: '/tool/readme',
+    name: 'Readme',
+    component: Readme,
+    meta: { title: 'Readme' },
   },
 ]

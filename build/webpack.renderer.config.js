@@ -134,6 +134,10 @@ let rendererConfig = {
           },
         },
       },
+      {
+        test: /\.md$/,
+        use: ['text-loader'],
+      },
     ],
   },
   node: {
