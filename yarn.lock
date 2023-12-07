@@ -1161,9 +1161,9 @@
     undici-types "~5.25.1"
 
 "@types/node@^16.11.26":
-  version "16.18.59"
-  resolved "https://registry.npmmirror.com/@types/node/-/node-16.18.59.tgz#4cdbd631be6d9be266a96fb17b5d0d7ad6bbe26c"
-  integrity sha512-PJ1w2cNeKUEdey4LiPra0ZuxZFOGvetswE8qHRriV/sUkL5Al4tTmPV9D2+Y/TPIxTHHgxTfRjZVKWhPw/ORhQ==
+  version "16.18.67"
+  resolved "https://registry.npmmirror.com/@types/node/-/node-16.18.67.tgz#518feb681958dedf2d187b8b4d20bf3530afe1fb"
+  integrity sha512-gUa0tDO9oxyAYO9V9tqxDJguVMDpqUwH5I5Q9ASYBCso+8CUdJlKPKDYS1YSS9kyZWIduDafZvucGM0zGNKFjg==
 
 "@types/qs@*":
   version "6.9.9"
@@ -3144,6 +3144,11 @@ builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmmirror.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
   integrity sha512-HpGFw18DgFWlncDfjTa2rcQ4W88O1mC8e8yZ2AvQY5KDaktSTwo+KRf6nHK6FRI5FyRyb/5T6+TSxfP7QyGsmQ==
+
+bytenode@^1.5.3:
+  version "1.5.3"
+  resolved "https://registry.npmmirror.com/bytenode/-/bytenode-1.5.3.tgz#84386f521bd5e2979415feabc484a0aab0a4f06a"
+  integrity sha512-3CyKOG4e/nEyI3LfzOahuzSfGGXHtUg8487xewEi7P6bFEwFhJmmee0MpWfWvPd1sir6S4rcPxTMciQyc/CAHQ==
 
 bytes@3.0.0:
   version "3.0.0"

@@ -12,11 +12,10 @@ exports.default = async function (context) {
   } else {
     targetPath = path.join(context.appOutDir, './resources')
   }
-  const unpacked = path.join(targetPath, './app.asar.unpacked')
-  // const unpacked = path.join(targetPath, './app/dist/electron/renderer')
+  const unpacked = path.join(targetPath, './app/dist/electron/renderer')
   var zip = new AdmZip()
   zip.addLocalFolder(unpacked)
-  zip.writeZip(path.join(context.outDir, 'unpacked.zip'))
+  zip.writeZip(path.join(context.outDir, 'renderer.zip'))
 
   fs.writeFile(
     path.join(context.outDir, 'hotVersion.json'),

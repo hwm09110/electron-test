@@ -21,7 +21,7 @@ Object.defineProperty(app, 'isPackaged', {
 
 let mainWin = null
 const getLatestPatchVersionUrl = 'http://192.168.8.172:3600/resource/app/pack/hotVersion.json'
-const getLatestPatchZipUrl = 'http://192.168.8.172:3600/resource/app/pack/unpacked.zip'
+const getLatestPatchZipUrl = 'http://192.168.8.172:3600/resource/app/pack/renderer.zip'
 
 function initAppUpdate(win, autoCheck = false) {
   mainWin = win
@@ -119,6 +119,18 @@ function initAppUpdate(win, autoCheck = false) {
   }
 }
 
+/**
+ *生成多层目录
+ * @param dir 多层目录
+ */
+function createDir(dir, callback = () => {}) {
+  if (!fs.existsSync(dir)) {
+    fs.mkdir(dir, { recursive: true }, callback)
+  } else {
+    logger.info('目录已存在：', dir)
+  }
+}
+
 // 获取当前hot版本号
 function getCurrrentPatchVersion() {
   const hotVerPath = `${getAppExeDir()}/resources/hotVersion.json`
@@ -170,6 +182,7 @@ function getRemotePatchVersion() {
 function downloadHotPackFileZip(targetPath) {
   return new Promise((resolve, reject) => {
     try {
+      createDir(path.dirname(targetPath))
       const request = net.request({
         url: getLatestPatchZipUrl + `?t=${Date.now()}`,
         method: 'get',
@@ -180,6 +193,8 @@ function downloadHotPackFileZip(targetPath) {
         let receivedBytes = 0
         logger.info(`文件size: ${contentLength}`, response)
 
+        // 创建目录
+
         // 保存文件到本地
         const outFile = fs.createWriteStream(targetPath)
         response.pipe(outFile)
@@ -188,7 +203,7 @@ function downloadHotPackFileZip(targetPath) {
           receivedBytes += chunk.length
           // 更新下载进度
           const progress = (receivedBytes / contentLength) * 100
-          // logger.info(`下载进度: ${progress}%`)
+          logger.info(`下载进度: ${progress}%`)
         })
 
         response.on('end', () => {
@@ -364,10 +379,10 @@ async function checkPatckUpdate() {
     logger.info('patchUpdate curVersion：', curVersion)
     logger.info('patchUpdate remoteVersion：', remoteVersion)
 
-    const resourcePath = `${getAppExeDir()}/resources/`
-    const unpatchZipPath = resourcePath + 'unpatch.zip'
-    const appPath = resourcePath + 'app.asar.unpacked'
-    const appOldPath = resourcePath + 'app.asar.unpacked.old'
+    const resourcePath = `${getAppExeDir()}/resources/app/dist/electron/`
+    const unpatchZipPath = resourcePath + 'renderer.zip'
+    const appPath = resourcePath + 'renderer'
+    const appOldPath = resourcePath + 'renderer.old'
 
     logger.info('patchUpdate resourcePath：', resourcePath)
     logger.info('patchUpdate unpatchZipPath：', unpatchZipPath)
@@ -375,10 +390,12 @@ async function checkPatckUpdate() {
     logger.info('patchUpdate appOldPath：', appOldPath)
 
     logger.info(`currentVersion：${curVersion},latestVersion：${remoteVersion}`)
+    logger.info('dir--->', path.dirname(unpatchZipPath))
+
     if (curVersion != remoteVersion) {
       sendPatchUpdateMsg({ status: 'start', msg: `开始下载更新包` })
       await downloadHotPackFileZip(unpatchZipPath)
-      sendPatchUpdateMsg({ status: 'pending', msg: `开始下载更新包` })
+      sendPatchUpdateMsg({ status: 'pending', msg: `更新包下载完成` })
       if (isDirectoryExists(appOldPath)) {
         sendPatchUpdateMsg({ status: 'pending', msg: `删除旧的备份文件` })
         deleteFolderRecursiveAsync(appOldPath, (er) => {
@@ -394,7 +411,8 @@ async function checkPatckUpdate() {
         doUpdatePatch(appPath, appOldPath, unpatchZipPath, remoteVersion)
       }
     } else {
-      sendPatchUpdateMsg({ status: 'finish', msg: `已经是最新版本啦` })
+      logger.info('~~已经是最新版本咯~~')
+      sendPatchUpdateMsg({ status: 'finish', msg: `已经是最新版本咯` })
     }
   } catch (er) {
     logger.error('checkPatckUpdate', er)

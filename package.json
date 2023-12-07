@@ -1,15 +1,16 @@
 {
   "name": "electron-demo",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "electron-test",
   "main": "./dist/electron/main/main.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development node ./build/dev-runner.js",
     "dev:web": "cross-env NODE_ENV=development BUILD_TARGET=web node ./build/dev-runner.js",
     "build": "cross-env NODE_ENV=production node ./build/index.js",
-    "build:app": "cross-env NODE_ENV=production node ./build/index.js && electron-builder",
+    "build:app": "cross-env NODE_ENV=production node ./build/index.js && yarn encry && electron-builder",
     "build:web": "cross-env NODE_ENV=production BUILD_TARGET=web node ./build/index.js",
-    "clean": "cross-env BUILD_TARGET=clean node ./build/index.js"
+    "clean": "cross-env BUILD_TARGET=clean node ./build/index.js",
+    "encry": "node ./build/encrycode.js"
   },
   "keywords": [
     "electron"
@@ -60,6 +61,7 @@
   "dependencies": {
     "@electron/remote": "^2.1.0",
     "adm-zip": "^0.5.10",
+    "bytenode": "^1.5.3",
     "core-js": "^3.33.1",
     "electron-log": "^5.0.0",
     "view-design": "^4.7.0",
@@ -71,17 +73,13 @@
     "productName": "electron-demo",
     "appId": "456789",
     "copyright": "Copyright©2023hwm",
+    "asar": "false",
     "directories": {
       "output": "pack"
     },
     "afterPack": "./build/afterpack.js",
     "files": [
       "dist/electron/**/*"
-    ],
-    "asarUnpack": [
-      "**/renderer/**/*",
-      "**/node_modules/**/*",
-      "**/package.json"
     ],
     "extraResources": [
       {
@@ -131,7 +129,7 @@
         {
           "target": "nsis",
           "arch": [
-            "ia32"
+            "x64"
           ]
         }
       ]

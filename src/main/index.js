@@ -8,7 +8,7 @@ const initAppTray = require('./lib/appTray')
 const remote = require('@electron/remote/main')
 remote.initialize()
 
-const winURL =
+let winURL =
   process.env.NODE_ENV === 'development'
     ? `http://localhost:9080`
     : `file://${path.resolve(__dirname, '..')}/renderer/index.html`
@@ -30,12 +30,14 @@ const createWindow = () => {
   })
   if (process.env.NODE_ENV === 'production') {
     // 从app.asar分离renderer
-    const exeDirName = path.dirname(app.getPath('exe')).replace('/\\/g', '/')
-    const webURL = `file://${exeDirName}/resources/app.asar.unpacked/dist/electron/renderer/index.html`
-    mainWindow.loadURL(webURL)
-  } else {
-    mainWindow.loadURL(winURL)
+    // const exeDirName = path.dirname(app.getPath('exe')).replace('/\\/g', '/')
+    // winURL = `file://${exeDirName}/resources/app.asar.unpacked/dist/electron/renderer/index.html`
   }
+  mainWindow.loadURL(winURL)
+
+  logger.info('renderer winURL: ' + winURL)
+  logger.info('process.versions: ', process.versions)
+
   // 打开开发工具
   mainWindow.webContents.openDevTools()
   remote.enable(mainWindow.webContents)
