@@ -7,7 +7,7 @@ const v8 = require('v8')
 
 v8.setFlagsFromString('--no-lazy')
 
-const pathName = path.join(__dirname, '../dist/electron/main/main.js')
+const pathName = path.join(__dirname, '../dist/main/main.js')
 
 try {
   ;(async function () {

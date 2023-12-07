@@ -12,7 +12,7 @@ exports.default = async function (context) {
   } else {
     targetPath = path.join(context.appOutDir, './resources')
   }
-  const unpacked = path.join(targetPath, './app/dist/electron/renderer')
+  const unpacked = path.join(targetPath, './app/dist/renderer')
   var zip = new AdmZip()
   zip.addLocalFolder(unpacked)
   zip.writeZip(path.join(context.outDir, 'renderer.zip'))

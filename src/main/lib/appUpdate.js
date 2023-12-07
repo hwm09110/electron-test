@@ -379,7 +379,7 @@ async function checkPatckUpdate() {
     logger.info('patchUpdate curVersion：', curVersion)
     logger.info('patchUpdate remoteVersion：', remoteVersion)
 
-    const resourcePath = `${getAppExeDir()}/resources/app/dist/electron/`
+    const resourcePath = `${getAppExeDir()}/resources/app/dist/`
     const unpatchZipPath = resourcePath + 'renderer.zip'
     const appPath = resourcePath + 'renderer'
     const appOldPath = resourcePath + 'renderer.old'

@@ -156,6 +156,6 @@ main.js 改动
 
 ```javascript
 const exeDirName = path.dirname(app.getPath('exe')).replace('/\\/g', '/')
-winURL = `file://${exeDirName}/resources/app.asar.unpacked/dist/electron/renderer/index.html`
+winURL = `file://${exeDirName}/resources/app.asar.unpacked/dist/renderer/index.html`
 mainWindow.loadURL(winURL)
 ```

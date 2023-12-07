@@ -2,7 +2,7 @@
   "name": "electron-demo",
   "version": "0.0.19",
   "description": "electron-test",
-  "main": "./dist/electron/main/main.js",
+  "main": "./dist/main/main.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development node ./build/dev-runner.js",
     "dev:web": "cross-env NODE_ENV=development BUILD_TARGET=web node ./build/dev-runner.js",
@@ -79,7 +79,7 @@
     },
     "afterPack": "./build/afterpack.js",
     "files": [
-      "dist/electron/**/*"
+      "dist/**/*"
     ],
     "extraResources": [
       {

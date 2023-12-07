@@ -83,7 +83,7 @@ function startRenderer() {
     const server = new WebpackDevServer(
       {
         static: {
-          directory: path.join(__dirname, '../dist/electron/renderer'), //网站的根目录为 根目录/dist，如果配置不对，会报Cannot GET /错误\
+          directory: path.join(__dirname, '../dist/renderer'), //网站的根目录为 根目录/dist，如果配置不对，会报Cannot GET /错误\
         },
         // host: '0.0.0.0',
         port: 9080, //端口
@@ -140,7 +140,7 @@ function startMain() {
 }
 
 function startElectron() {
-  var args = ['--inspect=5858', path.join(__dirname, '../dist/electron/main/main.js')]
+  var args = ['--inspect=5858', path.join(__dirname, '../dist/main/main.js')]
 
   // detect yarn or npm and process commandline args accordingly
   if (process.env.npm_execpath.endsWith('yarn.js')) {

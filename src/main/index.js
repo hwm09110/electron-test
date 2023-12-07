@@ -31,7 +31,7 @@ const createWindow = () => {
   if (process.env.NODE_ENV === 'production') {
     // 从app.asar分离renderer
     // const exeDirName = path.dirname(app.getPath('exe')).replace('/\\/g', '/')
-    // winURL = `file://${exeDirName}/resources/app.asar.unpacked/dist/electron/renderer/index.html`
+    // winURL = `file://${exeDirName}/resources/app.asar.unpacked/dist/renderer/index.html`
   }
   mainWindow.loadURL(winURL)
 

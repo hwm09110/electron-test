@@ -21,7 +21,7 @@ const { VueLoaderPlugin } = require('vue-loader')
  */
 let whiteListedModules = ['vue']
 
-let outPath = path.join(__dirname, '../dist/electron/renderer')
+let outPath = path.join(__dirname, '../dist/renderer')
 if (process.env.BUILD_TARGET === 'web') {
   outPath = path.join(__dirname, '../dist/web')
 }
@@ -210,7 +210,7 @@ if (process.env.NODE_ENV === 'production') {
     // new CopyWebpackPlugin([
     //   {
     //     from: path.join(__dirname, '../src/renderer/assets'),
-    //     to: path.join(__dirname, '../dist/electron/assets'),
+    //     to: path.join(__dirname, '../dist/assets'),
     //     ignore: ['.*'],
     //   },
     // ]),
