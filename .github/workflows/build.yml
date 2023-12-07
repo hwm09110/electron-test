@@ -3,9 +3,9 @@ name: build
 on:
   push:
     branches:
-      - master-packencry
-    # tags:
-    #   - '*'
+      - main
+    tags:
+      - '*'
 jobs:
   build:
     runs-on: windows-latest
