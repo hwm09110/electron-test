@@ -104,7 +104,7 @@ function getAppConfigPath() {
   const exeDirName = path.dirname(app.getPath('exe')).replace('/\\/g', '/')
   const configPath = `${
     process.env.NODE_ENV == 'development'
-      ? path.join(__dirname, '../../../public/config.json')
+      ? path.join(__dirname, '../../public/config.json')
       : exeDirName + '/resources/public/config.json'
   }`
   return configPath

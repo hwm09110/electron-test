@@ -12,7 +12,7 @@ module.exports = function initAppTray(win) {
   const exeDirName = path.dirname(app.getPath('exe')).replace('/\\/g', '/')
   const file_path = `${
     process.env.NODE_ENV == 'development'
-      ? path.join(__dirname, '../../../public/icons/favicon.png')
+      ? path.join(__dirname, '../../public/icons/favicon.png')
       : path.join(exeDirName, '/resources/public/icons/favicon.png')
   }`
 
